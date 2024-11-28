@@ -6,7 +6,11 @@ import { sendVerificationRequest } from "./lib/authSendRequest";
 import { Pool } from "@neondatabase/serverless";
 
 const providers: Provider[] = [
-  Google,
+  Google({
+      profile(profile) {
+        return { role: profile.role ?? "user"}
+      }
+    }),
   {
     id: "http-email",
     name: "Email",
@@ -32,16 +36,13 @@ export const providerMap = providers
 export const { handlers, auth, signIn, signOut } = NextAuth(() => {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   return {
+    // debug:true,
+    // @ts-expect-error This is not an error!! someone should update the typing for this!
     adapter: PostgresAdapter(pool),
     callbacks: {
-      signIn : async ({ account }) => {
-        if (!account) {
-          return '/welcome';
-        }
-        return true;
-      },
       session({ session, user }) {
         session.user.id = user.id;
+        session.user.role = user.role;
         return session;
       },
       authorized: async ({ request: { nextUrl }, auth }) => {
@@ -52,9 +53,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
           if (isLoggedIn) return true;
           return false; // Redirect unauthenticated users to login page
         } else if (isLoggedIn) {
-          if (nextUrl.pathname.startsWith("/signin")){
-            return Response.redirect(new URL("/dashboard", nextUrl));
-          }
+          // return Response.redirect(new URL("/dashboard", nextUrl)); // TODO: fix this to allow for flexible url routing
         }
         return true;
       },
@@ -62,6 +61,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
     providers,
     pages: {
       signIn: "/signin",
+      newUser: "/newuser"
     },
   };
 });

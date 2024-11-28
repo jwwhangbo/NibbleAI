@@ -1,10 +1,11 @@
 import { signIn, providerMap } from "@/auth";
 
 export default async function SignInPage(props: {
-  searchParams: { callbackUrl: string | undefined };
+  searchParams: Promise<{ callbackUrl: string | undefined }>;
 }) {
+  const callbackUrl = (await props.searchParams)?.callbackUrl ?? "/dashboard";
   return (
-    <div className="flex flex-col gap-2">
+    (<div className="flex flex-col gap-2">
       {Object.values(providerMap).map((provider) => (
         <form
           key={provider.id}
@@ -12,7 +13,7 @@ export default async function SignInPage(props: {
             "use server";
             try {
               await signIn(provider.id, {
-                redirectTo: props.searchParams?.callbackUrl ?? "",
+                redirectTo: callbackUrl,
               });
             } catch (error) {
               // Signin can fail for a number of reasons, such as the user
@@ -38,23 +39,29 @@ export default async function SignInPage(props: {
       <form
         action={async (formData) => {
           "use server";
+          const email = formData.get("email") || "";
           try {
-            await signIn("http-email", formData, { callbackUrl: "/dashboard" });
+            await signIn("http-email", { email: email, redirectTo:callbackUrl, redirect:true });
+            // TODO: popup dialog : email sent!
           } catch (err) {
-            console.log(err);
+            // if (!isRedirectError(err)) {
+            //   console.log('redirect err');
+            //   console.log(err);
+            // }
             // return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`);
             throw err;
           }
-        }}
+        }
+      }
       >
         <label htmlFor="email">
           Email
-          <input className="border-2 rounded-md p-1" name="email" id="email"/>
+          <input className="border-2 rounded-md p-1" type="email" name="email" id="email" required />
         </label>
         <button className="py-2 px-3 ml-2 bg-gray-400 rounded-md" type="submit">
           <span>Sign in</span>
         </button>
       </form>
-    </div>
+    </div>)
   );
 }
