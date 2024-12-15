@@ -8,7 +8,7 @@ export default async function Page() {
             <span>{session?.user?.id}</span>
             <form action={async () => {
                 "use server"
-                await signOut({redirectTo:'/'});
+                await signOut({redirectTo:'/signin'});
             }}>
                 <button type="submit">
                     sign out

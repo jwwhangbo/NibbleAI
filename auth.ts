@@ -4,13 +4,14 @@ import Google from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers";
 import { sendVerificationRequest } from "./lib/authSendRequest";
 import { Pool } from "@neondatabase/serverless";
+import { logoMap } from "./lib/utils";
 
 const providers: Provider[] = [
   Google({
-      profile(profile) {
-        return { role: profile.role ?? "user"}
-      }
-    }),
+    profile(profile) {
+      return { role: profile.role ?? "user" };
+    },
+  }),
   {
     id: "http-email",
     name: "Email",
@@ -26,9 +27,21 @@ export const providerMap = providers
   .map((provider) => {
     if (typeof provider === "function") {
       const providerData = provider();
-      return { id: providerData.id, name: providerData.name };
+      return {
+        id: providerData.id,
+        name: providerData.name,
+        get logoUrl() {
+          return logoMap[providerData.name];
+        },
+      };
     } else {
-      return { id: provider.id, name: provider.name };
+      return {
+        id: provider.id,
+        name: provider.name,
+        get logoUrl() {
+          return logoMap[provider.name];
+        },
+      };
     }
   })
   .filter((provider) => provider.id !== "http-email");
@@ -61,7 +74,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
     providers,
     pages: {
       signIn: "/signin",
-      newUser: "/newuser"
+      newUser: "/newuser",
     },
   };
 });

@@ -20,3 +20,7 @@ declare module "next-auth/jwt" {
     role?: string;
   }
 }
+
+export type LogoMap = {
+  [key: string]: string;
+};
