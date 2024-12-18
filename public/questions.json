@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "question": "How would you rate your cooking skills?",
+    "type": "single_choice",
+    "options": ["Beginner", "Intermediate", "Advanced"]
+  },
+  {
+    "id": 2,
+    "question": "How often do you cook?",
+    "type": "single_choice",
+    "options": ["Rarely", "Occasionally", "Often", "Daily"]
+  },
+  {
+    "id": 3,
+    "question": "Do you have any dietary restrictions?",
+    "type": "multi_choice",
+    "options": ["None", "Vegetarian", "Vegan", "Gluten-free", "Dairy-free", "Other"]
+  },
+  {
+    "id": 4,
+    "question": "How much time do you have to cook?",
+    "type": "single_choice",
+    "options": ["<30 minutes", "30–60 minutes", "1–2 hours", "No time limit"]
+  },
+  {
+    "id": 5,
+    "question": "What kitchen equipment do you have access to?",
+    "type": "multi_choice",
+    "options": ["Stovetop", "Oven", "Microwave", "Air Fryer", "Other"]
+  },
+  {
+    "id": 6,
+    "question": "Where are you located?",
+    "type": "single_choice",
+    "options": ["North America", "Europe", "Asia", "South America", "Africa", "Oceania", "Other"]
+  },
+  {
+    "id": 7,
+    "question": "Would you prefer traditional dishes from your region or global cuisines?",
+    "type": "single_choice",
+    "options": ["Traditional dishes", "Global cuisines", "No preference"]
+  },
+  {
+    "id": 8,
+    "question": "Which cuisines do you enjoy? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["Italian", "Mexican", "Chinese", "Indian", "French", "Other"]
+  },
+  {
+    "id": 9,
+    "question": "Are there any cuisines or flavors you want to avoid?",
+    "type": "multi_choice",
+    "options": ["None", "Spicy Food", "Seafood", "Other"]
+  },
+  {
+    "id": 10,
+    "question": "What flavors do you enjoy most?",
+    "type": "multi_choice",
+    "options": ["Sweet", "Salty", "Spicy", "Bitter", "Sour", "Umami"]
+  },
+  {
+    "id": 11,
+    "question": "Are there any flavors you dislike?",
+    "type": "multi_choice",
+    "options": ["Sweet", "Salty", "Spicy", "Bitter", "Sour", "Umami"]
+  },
+  {
+    "id": 12,
+    "question": "Do you have a preference for food textures?",
+    "type": "multi_choice",
+    "options": ["Crunchy", "Creamy", "Tender", "Crispy", "No preference"]
+  },
+  {
+    "id": 13,
+    "question": "What proteins do you have available?",
+    "type": "multi_choice",
+    "options": ["Chicken", "Beef", "Pork", "Tofu", "Lentils", "Eggs", "Other"]
+  },
+  {
+    "id": 14,
+    "question": "What vegetables or fruits do you have available?",
+    "type": "multi_choice",
+    "options": ["Tomatoes", "Spinach", "Carrots", "Broccoli", "Onions", "Other"]
+  },
+  {
+    "id": 15,
+    "question": "What pantry staples do you have?",
+    "type": "multi_choice",
+    "options": ["Rice", "Pasta", "Flour", "Spices", "Olive Oil", "Other"]
+  }
+]

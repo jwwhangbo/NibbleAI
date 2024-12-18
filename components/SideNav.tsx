@@ -1,6 +1,5 @@
 "use client";
 import UserProfile from "@/components/ui/userProfile";
-import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 
 export default function SideNavbar({
   user,

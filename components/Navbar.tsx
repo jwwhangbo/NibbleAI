@@ -5,7 +5,7 @@ import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 import clsx from "clsx";
 
 export default function Navbar({ user }: { user: {id: number, email: string, profileImage:string}}) {
-  const { active, setActive } = useNavbarStore((state) => state,);
+  const { active } = useNavbarStore((state) => state,);
   return (
     <div className={clsx(["w-screen h-full flex transition ease-in-out"], {'-translate-x-[247px]': !active})}>
       <SideNavbar user={user} />
