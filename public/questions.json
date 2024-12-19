@@ -15,11 +15,11 @@
     "id": 3,
     "question": "Do you have any dietary restrictions?",
     "type": "multi_choice",
-    "options": ["None", "Vegetarian", "Vegan", "Gluten-free", "Dairy-free", "Other"]
+    "options": ["None", "Dairy-free", "Vegetarian", "Vegan", "Gluten-free", "Halal", "Other"]
   },
   {
     "id": 4,
-    "question": "How much time do you have to cook?",
+    "question": "How much time do you put in when cooking a meal?",
     "type": "single_choice",
     "options": ["<30 minutes", "30–60 minutes", "1–2 hours", "No time limit"]
   },
@@ -45,13 +45,13 @@
     "id": 8,
     "question": "Which cuisines do you enjoy? (You can select multiple)",
     "type": "multi_choice",
-    "options": ["Italian", "Mexican", "Chinese", "Indian", "French", "Other"]
+    "options": ["Italian", "Mexican", "Chinese", "Indian", "French", "Japanese", "Other"]
   },
   {
     "id": 9,
     "question": "Are there any cuisines or flavors you want to avoid?",
     "type": "multi_choice",
-    "options": ["None", "Spicy Food", "Seafood", "Other"]
+    "options": ["None", "Spicy Food", "Seafood", "High Sodium", "High Fat", "Other"]
   },
   {
     "id": 10,

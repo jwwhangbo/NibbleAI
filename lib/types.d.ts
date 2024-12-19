@@ -24,3 +24,10 @@ declare module "next-auth/jwt" {
 export type LogoMap = {
   [key: string]: string;
 };
+
+export type Question = {
+  id: number;
+  question: string;
+  type: string;
+  options: string[];
+};
