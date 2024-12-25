@@ -63,7 +63,7 @@ async function createSessionsTable(client) {
   );
 }
 
-async function createUsersTable(client) {
+async function createUsersTable(client) { // TODO: update to include preferences column
   await client.query(
     `CREATE TABLE IF NOT EXISTS users(
       id SERIAL,
@@ -83,6 +83,46 @@ async function createUsersTable(client) {
   );
 }
 
+async function createRecipesTable(client) {
+  await client.query(
+    `CREATE TABLE IF NOT EXISTS recipes(
+      id SERIAL,
+      userId INTEGER references users(id),
+      title VARCHAR(255),
+      images VARCHAR(255)[],
+      description VARCHAR(255),
+      ingredients json,
+      instructions TEXT,
+      "date_creatded" TIMESTAMPTZ,
+      "date_updated" TIMESTAMPTZ,
+      public boolean,
+    
+      PRIMARY KEY (id)
+    );`
+  );
+
+  console.log(
+    "\x1b[1m\x1b[36m%s \x1b[0m%s",
+    "notice",
+    'Successfully created "recipes" table'
+  );
+}
+
+async function createGeneratedRecipesTable(client) {
+  await client.query(
+    `CREATE TABLE IF NOT EXISTS recipes_generated(
+      userId INTEGER references users(id),
+      recipesId INTEGER[] 
+    );`
+  );
+
+  console.log(
+    "\x1b[1m\x1b[36m%s \x1b[0m%s",
+    "notice",
+    'Successfully created "recipes_generated" table'
+  );
+}
+
 async function main() {
   const client = new Client({ connectionString: process.env.DATABASE_URL });
 
@@ -98,6 +138,8 @@ async function main() {
   await createAccountsTable(client);
   await createSessionsTable(client);
   await createUsersTable(client);
+  await createRecipesTable(client);
+  await createGeneratedRecipesTable(client);
 
   client.end();
 }

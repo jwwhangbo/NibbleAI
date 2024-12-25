@@ -1,34 +1,20 @@
-'use server'
-import { auth } from "@/auth";
-import Navbar from "@/components/Navbar";
-import defaultUserImage from "@/public/defaultUserImage.jpg"
+import SideNavbar from "@/components/SideNav";
+import TopNavbar from "@/components/TopNavbar";
 import { NavbarStoreProvider } from "@/src/providers/navbar-store-provider";
+import { SessionProvider } from "next-auth/react";
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
-  if (!session) {
-    throw new Error("you must be logged in!")
-  }
-
-  const user = {
-    id : session?.user?.id,
-    email : session?.user?.email || "",
-    profileImage : session?.user?.image || defaultUserImage,
-  }
-
   return (
-    <div>
-      <div className="fixed w-full h-full pointer-events-none">
+    <SessionProvider>
         <NavbarStoreProvider>
-          <Navbar user={user}/>
+          <TopNavbar /> 
+          <SideNavbar />
         </NavbarStoreProvider>
-      </div>
       <div className="pt-[56px]">{children}</div>
-    </div>
+    </SessionProvider>
   );
 }

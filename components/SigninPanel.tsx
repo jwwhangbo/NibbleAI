@@ -24,6 +24,7 @@ export default function Panel({
         width="95"
         height="300"
         src="/logo.png"
+        style={{ width: "auto", height: "auto" }}
       />
       <EmailSigninHandler callbackUrl={callbackUrl} />
       <Divider className="w-full flex flex-row items-center gap-[14px]" />

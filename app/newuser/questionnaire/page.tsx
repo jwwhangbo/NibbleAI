@@ -4,8 +4,10 @@ import QuestionBox from "@/components/ui/questionBox";
 import { preferenceSchema } from "@/src/validationSchemas/preferenceSchema";
 import { ValidationError } from "yup";
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { InView } from "react-intersection-observer";
+import { updateUserPreference } from "@/src/controllers/UserController";
+import LoadingIndicator from "@/components/ui/LoadingIndicator";
+import PreferenceAlertDialog from "@/components/ui/PreferenceAlertDialog";
 
 export default function Page() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -13,8 +15,11 @@ export default function Page() {
   const [visibleSection, setVisibleSection] = useState(
     questions[0].id.toString()
   );
-  const router = useRouter();
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+
   const scrollableContainerRef = useRef<HTMLDivElement>(null);
+
   const setInView = (inView: boolean, entry: IntersectionObserverEntry) => {
     if (inView) {
       const id = entry.target.getAttribute("id");
@@ -23,6 +28,7 @@ export default function Page() {
       }
     }
   };
+
   const onClickLeft = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (scrollableContainerRef.current) {
@@ -55,20 +61,6 @@ export default function Page() {
     };
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (["ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setErrors({});
     event.preventDefault();
@@ -88,23 +80,38 @@ export default function Page() {
     });
 
     try {
-      await preferenceSchema.validate(formValues, {
+      const result = await preferenceSchema.validate(formValues, {
         abortEarly: false,
       });
-      // redirect to dashboard
-      router.push("/dashboard");
+      setOpenDialog(true);
+      await updateUserPreference(result);
+      setSubmitted(true);
     } catch (error) {
       if (error instanceof ValidationError) {
-        setErrors(
-          error.inner.reduce((acc: { [key: string]: string }, curr) => {
+        const newErrors = error.inner.reduce(
+          (acc: { [key: string]: string }, curr) => {
             acc[curr.path || "unknown"] = curr.message;
             return acc;
-          }, {})
+          },
+          {}
         );
-        if (Object.keys(errors)) {
-          const firstErrorId = Object.keys(errors)[0];
+        setErrors(newErrors);
+        if (Object.keys(newErrors)) {
+          const firstErrorId = Object.keys(newErrors)[0];
           const element = document.getElementById(firstErrorId);
-          element?.scrollIntoView({behavior: "smooth"});
+          if (element) {
+            if (scrollableContainerRef.current) {
+              scrollableContainerRef.current.style.scrollSnapType = "none";
+            }
+
+            element.scrollIntoView({ behavior: "smooth", inline: "center" });
+            
+            setTimeout(() => {
+              if (scrollableContainerRef.current) {
+                scrollableContainerRef.current.style.scrollSnapType = "";
+              }
+            }, 1000);
+          }
         }
       }
     }
@@ -162,9 +169,11 @@ export default function Page() {
                 next
               </button>
             )}
+            <PreferenceAlertDialog open={openDialog} submitted={submitted} />
           </div>
         </div>
       </form>
+
       <span>{`${visibleSection} / ${questions.length}`}</span>
     </div>
   );

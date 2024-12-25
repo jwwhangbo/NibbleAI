@@ -1,24 +1,25 @@
+'use client'
 import Image from "next/image";
+import defaultUserImage from "@/public/defaultUserImage.jpg"
+import { useSession } from "next-auth/react"
 
-export default function NavbarUserProfile({
-  user,
-}: {
-  user: { id: number, email: string; profileImage: string };
-}) {
+export default function NavbarUserProfile(props: React.HTMLAttributes<HTMLDivElement>) {
+  const session = useSession();
+  const userinfo = session?.data?.user;
   return (
-    <div className="flex items-center w-full h-[56px] bg-red-100">
+    <div {...props}>
       <a
         className="flex justify-center items-center gap-2 w-fit m-auto"
-        href={`/user/${user.id}`}
+        href={`/user/${userinfo?.id}`}
       >
         <Image
           className="rounded-full"
-          src={user.profileImage}
+          src={userinfo?.profileImage || defaultUserImage}
           alt="User avatar"
           width="32"
           height="32"
         />
-        <span>{user.email}</span>
+        <span>{userinfo?.email}</span>
       </a>
     </div>
   );

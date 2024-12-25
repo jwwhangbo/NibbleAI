@@ -1,19 +1,19 @@
-import { auth, signOut } from "@/auth"
+import { signOut } from "@/auth"
+import DailyRecipeSkeleton from "@/components/skeletons/DailyRecipeSkeleton";
 
 export default async function Page() {
-    const session = await auth();
     return (
-        <div className="h-[1200px] bg-gray-200">
-            <span>welcome!</span>
-            <span>{session?.user?.id}</span>
-            <form action={async () => {
-                "use server"
-                await signOut({redirectTo:'/signin'});
-            }}>
-                <button type="submit">
-                    sign out
-                </button>
-            </form>
-        </div>
+      <div className="h-[1200px] bg-gray-200">
+        <span>welcome!</span>
+        <DailyRecipeSkeleton />
+        <form
+          action={async () => {
+            "use server";
+            await signOut({ redirectTo: "/signin" });
+          }}
+        >
+          <button type="submit">sign out</button>
+        </form>
+      </div>
     );
 }

@@ -31,3 +31,18 @@ export type Question = {
   type: string;
   options: string[];
 };
+
+export type ResponseBody = {
+  [key: string]: string | string[];
+};
+
+export type Recipe = {
+  recipe_name: string;
+  recipe_description: string;
+  major_ingredients: {
+    ingredient: string;
+    quantity: number;
+    unit: string;
+  }[];
+  detailed_instruction: string[];
+};
