@@ -11,7 +11,7 @@ export default async function Layout({
   return (
     <SessionProvider>
         <NavbarStoreProvider>
-          <TopNavbar /> 
+          <TopNavbar variant="hamburger"/> 
           <SideNavbar />
         </NavbarStoreProvider>
       <div className="pt-[56px]">{children}</div>

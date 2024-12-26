@@ -38,6 +38,7 @@ export type ResponseBody = {
 
 export type Recipe = {
   recipe_name: string;
+  images: string[];
   recipe_description: string;
   major_ingredients: {
     ingredient: string;
@@ -45,4 +46,5 @@ export type Recipe = {
     unit: string;
   }[];
   detailed_instruction: string[];
+  public: boolean;
 };

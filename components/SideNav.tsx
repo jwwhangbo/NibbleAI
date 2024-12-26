@@ -8,10 +8,10 @@ export default function SideNavbar() {
   return (
     <div
       className={
-      clsx(["fixed h-screen w-[247px] bg-blue-200 flex-shrink-0 transition ease-in-out pointer-events-auto z-10", {"-translate-x-[247px]" : !active}])
+      clsx(["fixed shadow-inner h-screen w-[247px] bg-white flex-shrink-0 transition ease-in-out pointer-events-auto z-10", {"-translate-x-[247px]" : !active}])
       }
     >
-      <UserProfile className="flex items-center w-full h-[56px] bg-red-100"/>
+      <UserProfile className="flex items-center w-full h-[56px] bg-white border-b-2"/>
 
       <ul className="flex flex-col">
       <li className="p-4 hover:bg-gray-200 transition transitiion-duration-100">
