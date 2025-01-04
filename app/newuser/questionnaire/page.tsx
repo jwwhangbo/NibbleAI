@@ -6,7 +6,6 @@ import { ValidationError } from "yup";
 import { useState, useRef, useEffect } from "react";
 import { InView } from "react-intersection-observer";
 import { updateUserPreference } from "@/src/controllers/UserController";
-import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import PreferenceAlertDialog from "@/components/ui/PreferenceAlertDialog";
 
 export default function Page() {

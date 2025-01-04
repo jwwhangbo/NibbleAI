@@ -1,15 +1,16 @@
 import { signOut } from "@/auth"
-import DailyRecipe from "@/components/DailyRecipe";
+import Recommended from "@/components/Recommended";
 import DailyRecipeSkeleton from "@/components/skeletons/DailyRecipeSkeleton";
 import { Suspense } from "react";
 
 export default async function Page() {
     return (
-      <div className="px-[17px] bg-gray-200">
-        <h2 className="text-2xl">Recommended Recipes</h2>
-        <Suspense fallback={<DailyRecipeSkeleton />}>
-            <DailyRecipe />
-        </Suspense>
+      <div className="px-[17px]">
+        <div className="pt-5">
+          <Suspense key={Math.random()} fallback={<DailyRecipeSkeleton />}> {/* I can't for the love of god figure out a better way to make this happen...*/}
+              <Recommended />
+          </Suspense>
+        </div>
         <form
           action={async () => {
             "use server";

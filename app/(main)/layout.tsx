@@ -1,5 +1,5 @@
-import SideNavbar from "@/components/SideNav";
-import TopNavbar from "@/components/TopNavbar";
+import SideNavbar from "@/components/layout/SideNav";
+import TopNavbar from "@/components/layout/TopNavbar";
 import { NavbarStoreProvider } from "@/src/providers/navbar-store-provider";
 import { SessionProvider } from "next-auth/react";
 
@@ -14,7 +14,7 @@ export default async function Layout({
           <TopNavbar variant="hamburger"/> 
           <SideNavbar />
         </NavbarStoreProvider>
-      <div className="pt-[56px]">{children}</div>
+      <div className="pt-[56px] max-w-[1200px] mx-auto">{children}</div>
     </SessionProvider>
   );
 }

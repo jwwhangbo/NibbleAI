@@ -37,14 +37,17 @@ export type ResponseBody = {
 };
 
 export type Recipe = {
-  recipe_name: string;
+  userId: number;
+  title: string;
+  info?: {total_time: string, servings: string};
   images: string[];
-  recipe_description: string;
-  major_ingredients: {
+  description: string;
+  ingredients: {
     ingredient: string;
     quantity: number;
     unit: string;
   }[];
-  detailed_instruction: string[];
+  instructions: string[];
+  date_created: Date;
   public: boolean;
 };

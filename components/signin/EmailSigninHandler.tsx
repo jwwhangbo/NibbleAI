@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import LoadingIndicator from "./ui/LoadingIndicator";
+import LoadingIndicator from "../ui/LoadingIndicator";
 
 export default function EmailSigninHandler({
   callbackUrl,
@@ -70,7 +70,7 @@ export default function EmailSigninHandler({
     >
       <div className="w-full flex flex-col gap-[9px]">
         <input
-          className="w-full h-[48px] px-[14px] py-[12px] rounded-[6px] border-2 border-black"
+          className="w-full h-[48px] px-[14px] py-[12px] rounded-[6px] border-2 border-black focus:ring focus:border-blue-500 focus:outline-none"
           placeholder="Email"
           type="email"
           name="email"

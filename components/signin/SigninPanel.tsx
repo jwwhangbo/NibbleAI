@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Divider from "./ui/divider";
+import logo from "@/public/logo.png"
+import Divider from "../ui/divider";
 import { signIn, providerMap } from "@/auth";
 import clsx from "clsx";
 import EmailSigninHandler from "./EmailSigninHandler";
@@ -21,9 +22,9 @@ export default function Panel({
       <Image
         className="mb-4"
         alt="logo"
-        width="95"
+        width="150"
         height="300"
-        src="/logo.png"
+        src={logo}
         style={{ width: "auto", height: "auto" }}
       />
       <EmailSigninHandler callbackUrl={callbackUrl} />

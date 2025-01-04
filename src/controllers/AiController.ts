@@ -43,6 +43,10 @@ const RecipeSchema = z.object({
     z.object({
       recipe_name: z.string(),
       recipe_description: z.string(),
+      recipe_information: z.object({
+        total_time: z.string(),
+        servings: z.string(),
+      }),
       major_ingredients: z.array(
         z.object({
           ingredient: z.string(),
@@ -54,6 +58,8 @@ const RecipeSchema = z.object({
     })
   ),
 });
+
+export type GeneratedRecipe = z.infer<typeof RecipeSchema>;
 
 export async function GenerateUserPreference(responseBody: ResponseBody) {
   const compiledResponseBody = await CompilePreferenceResponse(responseBody);

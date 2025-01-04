@@ -1,4 +1,4 @@
-import TopNavbar from "@/components/TopNavbar";
+import TopNavbar from "@/components/layout/TopNavbar";
 
 export default function Layout({
   children,
