@@ -1,10 +1,12 @@
-import Link from "next/link";
+import UserForm from "@/components/newuser/UserForm";
+import { auth } from "@/auth";
 
-export default function NewUserPage() {
-    return (
-        <>
-            <span>welcome new user!</span>
-            <Link className="text-blue-700" href='/newuser/questionnaire'>continue</Link>
-        </>
-    ); 
+export default async function Page() {
+  const session = await auth();
+  return (
+    <div className="w-full h-dvh flex flex-col justify-center items-center gap-3">
+      <h2 className="text-2xl mb-6">This is how you will look</h2>
+      <UserForm session={session} />
+    </div>
+  );
 }

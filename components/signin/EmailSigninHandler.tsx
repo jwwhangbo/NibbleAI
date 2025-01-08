@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import LoadingIndicator from "../ui/LoadingIndicator";
+import { signIn } from "next-auth/react"; // TODO: use this instead
 
 export default function EmailSigninHandler({
   callbackUrl,
@@ -25,46 +26,18 @@ export default function EmailSigninHandler({
   }, [submissionState]);
   return (
     <form
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+      onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSubmissionState(SubmissionState.submitting);
         const formData = new FormData(e.currentTarget);
         const email = formData.get("email") || "";
-        fetch("/api/auth/csrf")
-          .then((response) => response.json())
-          .then((data) => {
-            const csrfToken = data.csrfToken;
-            fetch(`/api/auth/signin/http-email`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email: email,
-                callbackUrl: callbackUrl,
-                csrfToken: csrfToken,
-              }),
-            })
-              .then((response) => {
-                if (response.ok) {
-                  console.log("email sent");
-                  setSubmissionState(SubmissionState.submitted);
-                  setTimeout(() => {
-                    setSubmissionState(SubmissionState.ready);
-                  }, 3000);
-                } else {
-                  // Handle sign-in error
-                }
-              })
-              .catch((error) => {
-                console.error("Error during sign-in:", error);
-                setSubmissionState(SubmissionState.ready);
-              });
-          })
-          .catch((error) => {
-            console.error("Error fetching CSRF token:", error);
+        const response = await signIn('http-email', {email: email, redirect:false, redirectTo:callbackUrl})
+        if (response?.ok) {
+          setSubmissionState(SubmissionState.submitted);
+          setTimeout(() => {
             setSubmissionState(SubmissionState.ready);
-          });
+          }, 3000);
+        }
       }}
       className="w-full"
     >

@@ -16,11 +16,12 @@ export default function NavbarUserProfile( {userId, userName, userImage,...props
         href={`/user/${userId}`}
       >
         <Image
-          className="rounded-full"
+          className="rounded-full w-[32px] h-[32px] grow-0"
           src={userImage || defaultUserImage}
           alt="User avatar"
           width="32"
           height="32"
+          style={{ objectFit:'cover' }}
         />
         <span>{userName}</span>
       </a>

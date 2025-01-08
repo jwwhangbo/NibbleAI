@@ -5,6 +5,14 @@ import { auth } from "@/auth";
 import { pool as db } from "../utils/db";
 import { PoolClient } from "@neondatabase/serverless";
 
+export async function updateUserImage(userid: string, imageUrl: string | void | null ) {
+  const stmt = `
+  UPDATE users
+  SET image=$1 
+  WHERE id=$2;`;
+  await db.query(stmt, [imageUrl, userid]);
+}
+
 export async function getUserInfo(userid: number, client?: PoolClient) {
   const query = 'SELECT name, email, image FROM users WHERE id=$1'
   const result = client ? client.query(query, [userid]) : db.query(query, [userid]);
