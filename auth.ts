@@ -3,8 +3,8 @@ import PostgresAdapter from "@auth/pg-adapter";
 import Google from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers";
 import { sendVerificationRequest } from "./lib/authSendRequest";
-import { Pool } from "@neondatabase/serverless";
 import { logoMap } from "./lib/utils";
+import { pool } from "./src/utils/db";
 
 const providers: Provider[] = [
   Google({
@@ -46,9 +46,7 @@ export const providerMap = providers
   })
   .filter((provider) => provider.id !== "http-email");
 
-export const { handlers, auth, signIn, signOut } = NextAuth(() => {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  return {
+export const { handlers, auth, signIn, signOut } = NextAuth({
     // debug:true,
     // @ts-expect-error This is not an error!! someone should update the typing for this!
     adapter: PostgresAdapter(pool),
@@ -76,5 +74,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
       signIn: "/signin",
       newUser: "/newuser",
     },
-  };
 });

@@ -2,14 +2,26 @@
 import { auth } from "@/auth";
 import { pool as db } from "../utils/db";
 
+export async function getFilteredUserSavedRecipes(query: string, userid: number) {
+  const stmt = `
+  SELECT json_agg(r.*) as recipes
+  FROM collections c
+  LEFT JOIN recipes r
+  ON r.id = ANY(c.recipesid)
+  WHERE c.userid = $1 
+  AND c.name ILIKE $2
+  GROUP BY c.id;
+  `;
+
+  const result = await db.query(stmt, [userid, query]);
+  return result.rows;
+}
+
 export async function getUserCollections(userid: number) {
   const stmt = `
-    SELECT c.userid, c.name, json_agg(r.*) as recipes
+    SELECT name
     FROM collections c
-    LEFT JOIN recipes r
-    ON r.id = ANY(c.recipesid)
     WHERE c.userid=$1
-    GROUP BY c.id;
   `;
   const result = await db.query(stmt, [userid]);
   return result.rows;
