@@ -23,6 +23,18 @@ async function getGeneratedRecipes(userid: number) {
   return results.rows;
 }
 
+export async function getAllUserRecipes() {
+  const session = await auth();
+  if (!session) {throw new Error('Not Authorized')}
+  const query = `
+    SELECT *
+    FROM recipes
+    WHERE userId=$1;
+  `
+  const result = await db.query(query, [session.user.id]);
+  return result.rows;
+}
+
 /**
  * retrieves recipe from database
  * @param {number} recipeId
