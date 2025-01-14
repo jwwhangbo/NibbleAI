@@ -39,6 +39,7 @@ export type ResponseBody = {
 export type Recipe = {
   userId: number;
   title: string;
+  category: {catA: string, catB: string, dietary: string};
   info?: {total_time: string, servings: string};
   images: string[];
   description: string;

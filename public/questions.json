@@ -79,7 +79,7 @@
     "id": 13,
     "question": "What proteins do you like? (You can select multiple)",
     "type": "multi_choice",
-    "options": ["No preference", "Chicken", "Beef", "Pork", "Tofu", "Lentils", "Eggs", "Other"]
+    "options": ["No preference", "Chicken", "Beef", "Pork", "Seafood", "Tofu", "Lentils", "Eggs", "Other"]
   },
   {
     "id": 14,

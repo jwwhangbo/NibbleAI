@@ -13,7 +13,7 @@ export default function SideNavbar() {
   return (
     <div
       className={clsx([
-        "fixed shadow-inner h-screen w-[247px] bg-white flex-shrink-0 transition ease-in-out pointer-events-auto z-10",
+        "sm:hidden fixed shadow-inner h-screen w-[247px] bg-white flex-shrink-0 transition ease-in-out pointer-events-auto z-10",
         { "-translate-x-[247px]": !active },
       ])}
     >

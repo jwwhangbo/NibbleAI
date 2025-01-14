@@ -3,9 +3,10 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { use, useState } from "react";
 
-export default function SavedSidebar({ collections }: { collections: {id: number; name: string}[] }) {
+export default function SavedSidebar({ collectionPromise }: { collectionPromise: Promise<{id: number; name: string}[]> }) {
+  const collections = use(collectionPromise);
   const [active, setActive] = useState<boolean>(true)
   const pathname = usePathname();
   const paths = pathname.split('/');

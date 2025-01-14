@@ -10,11 +10,13 @@ export default async function Layout({
 }>) {
   return (
     <SessionProvider>
-        <NavbarStoreProvider>
-          <TopNavbar variant="hamburger"/> 
-          <SideNavbar />
-        </NavbarStoreProvider>
-      <div className="pt-[56px] max-w-[1200px] mx-auto">{children}</div>
+      <NavbarStoreProvider>
+        <TopNavbar />
+        <SideNavbar />
+      </NavbarStoreProvider>
+      <div className="pt-[56px] sm:pt-[106px] max-w-[1200px] mx-auto">
+        {children}
+      </div>
     </SessionProvider>
   );
 }

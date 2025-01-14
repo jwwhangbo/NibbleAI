@@ -18,10 +18,14 @@ const LikeHeart = ({ active, recipeId, ...props }: { active: boolean; recipeId: 
       {...props}
       onClick={
         !isactive
-          ? () => {
+          ? (e) => {
+              e.stopPropagation();
+              e.preventDefault();
               handleLike(recipeId);
             }
-          : () => {
+          : (e) => {
+              e.stopPropagation();
+              e.preventDefault();
               handleUnlike(recipeId);
             }
       }

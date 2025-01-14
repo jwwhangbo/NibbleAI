@@ -1,48 +1,50 @@
 "use client";
 import Image from "next/image";
-import logoOnly from "@/public/logo_only.png";
+import logoLandscape from "@/public/logo_cropped_landscape.png";
+import logoOnly from "@/public/logo_only.png"
 import HamburgerButton from "@/components/ui/HamburgerButton";
 import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 import clsx from "clsx";
-import BackArrow from "@/components/ui/back-arrow";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Navlinks from "./Navlinks";
 
-export default function TopNavbar({variant} : {variant:"back" | "hamburger"}) {
+export default function TopNavbar() {
   const pathname = usePathname();
   const onSearch = pathname.split('/').includes('search');
+  const navbarStore = useNavbarStore((s) => s);
 
-  let active = false;
-  try {
-    const navbarStore = useNavbarStore((s) => s);
-    active = variant === "hamburger" ? navbarStore.active : false;
-  } catch (e) {
-    if (variant === 'hamburger') {
-      throw e;
-    }
-  }
-  
   return (
     <div
       className={clsx([
-        "bg-white fixed w-screen min-w-[375px] h-[56px] shadow-md flex-shrink-0 pointer-events-auto transition ease-in-out z-10",
-        { "translate-x-[247px]": active },
+        "bg-white fixed w-screen min-w-[375px] h-fit pointer-events-auto transition ease-in-out z-10",
+        { "translate-x-[247px]": navbarStore.active },
       ])}
     >
-      <div className="flex w-full h-full px-[17px] justify-between items-center">
-        {variant === "hamburger" ? <HamburgerButton /> : <BackArrow />}
+      <div className="relative m-auto flex w-full max-w-[1200px] h-[56px] px-[17px] sm:px-[30px] justify-between items-center">
+        <HamburgerButton className="sm:!hidden" />
         <Image
-          src={logoOnly}
-          width="128"
-          height="128"
+          src={logoLandscape}
+          width="256"
+          height="256"
           alt="logo"
           // style={{ width: "auto", height: "auto" }}
           quality={100}
           priority={true}
-          className="h-[40px] w-[40px]"
+          className="h-3/4 w-auto hidden sm:block"
+        />
+        <Image
+          src={logoOnly}
+          width="256"
+          height="256"
+          alt="logo"
+          // style={{ width: "auto", height: "auto" }}
+          quality={100}
+          priority={true}
+          className="h-[40px] w-[40px] sm:hidden"
         />
         {!onSearch ? (
-          <Link href={"/recipes/search"}>
+          <Link href={"/search"}>
             <label htmlFor="search" className="sr-only">
               search
             </label>
@@ -65,6 +67,7 @@ export default function TopNavbar({variant} : {variant:"back" | "hamburger"}) {
           <div className="w-[32px] h-[32px]"></div>
         )}
       </div>
+      <Navlinks />
     </div>
   );
 }

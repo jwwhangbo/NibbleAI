@@ -38,10 +38,49 @@ const UserPreference = z.object({
   }),
 });
 
+const catA: [string, ...string[]] = [
+  "breakfast",
+  "lunch",
+  "dinner",
+  "appetizers",
+  "snacks",
+  "desserts",
+  "soups_stews",
+  "salads",
+  "main_courses",
+  "side_dishes",
+  "beverages",
+  "baking",
+  "quick_easy",
+  "holiday_festive",
+  "comfort_food",
+  "healthy"
+];
+
+const catB: [string, ...string[]] = [
+  "asian",
+  "european",
+  "middle eastern",
+  "african",
+  "latin american",
+  "north american",
+  "caribbean",
+  "pacific island",
+];
+
+const dietary: [string, ...string[]] = ["vegetarian", "vegan", "gluten-free"];
+
+const category = z.object({
+  categoryA: z.enum(catA),
+  categoryB: z.enum(catB),
+  dietary: z.enum(dietary).optional(),
+});
+
 const RecipeSchema = z.object({
   recipes: z.array(
     z.object({
       recipe_name: z.string(),
+      recipe_category: category,
       recipe_description: z.string(),
       recipe_information: z.object({
         total_time: z.string(),
@@ -58,6 +97,7 @@ const RecipeSchema = z.object({
     })
   ),
 });
+
 
 export type GeneratedRecipe = z.infer<typeof RecipeSchema>;
 
@@ -88,6 +128,7 @@ export async function GenerateUserRecipes(userid : number) : Promise<string>{
           "Generate 4 recipes based on the inputted preference object.",
           "Don't put too much emphasis on preferences, but take into account dislikes or avoids.",
           "Assume user is capable of buying or acquiring ingredients not in preferences.",
+          "Try not to generate two recipes of the same categoryA",
           "Don't use Umami in recipe names.",
           "Provide more country or region specific ingredients.",
           "If",

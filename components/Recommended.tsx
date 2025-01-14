@@ -13,11 +13,11 @@ export default async function Recommended() {
   
   return (
     <div className="w-full flex flex-col justify-center">
-      <div className="flex justify-between">
-        <h2 className="text-2xl">Recommended Recipes</h2>
+      <div className="flex justify-between items-center py-2">
+        <h2 className="text-2xl h-fit">Recommended Recipes</h2>
         <RefreshButton />
       </div>
-      <div className="flex flex-row flex-wrap gap-[16px] max-w-[500px] md:max-w-none md:w-full justify-center md:justify-start">
+      <div className="flex flex-row flex-wrap sm:flex-nowrap gap-[16px] justify-center">
         {recipes?.map((recipe) => {
           return <RecipeCard key={recipe.id} saved={favorites.includes(recipe.id)} {...recipe} />;
         })}

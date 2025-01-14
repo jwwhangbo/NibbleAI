@@ -104,10 +104,12 @@ export async function fetchGeneratedRecipes(userId : number) {
     const recipes = JSON.parse(await GenerateUserRecipes(userId)).recipes;
     const client = await db.connect();
     const insertIds: number[] = [];
-    for (const recipe of recipes) {
+
+    for (const recipe of recipes) { // Cast generated recipes into db format
       const recipeDbFormat: Recipe = {
         userId: 1,
         info: recipe.recipe_information,
+        category: recipe.recipe_category,
         title: recipe.recipe_name,
         images: [],
         description: recipe.recipe_description,
@@ -176,12 +178,13 @@ export async function addRecipe(
   client?: PoolClient
 ): Promise<number> {
   const query = `
-    INSERT INTO recipes (userid, title, info, images, description, ingredients, instructions, date_created, public)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    INSERT INTO recipes (userid, title, category, info, images, description, ingredients, instructions, date_created, public)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   RETURNING id`;
   const values = [
     recipe.userId,
     recipe.title,
+    recipe.category,
     recipe.info ?? null,
     recipe.images,
     recipe.description,
