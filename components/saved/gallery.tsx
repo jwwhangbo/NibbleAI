@@ -1,27 +1,33 @@
 "use client";
 
 import { Recipe } from "@/lib/types";
-import { useGalleryStore } from "@/src/providers/gallery-store-provider";
-import { useEffect, useState } from "react";
+import RecipeCard from "@/components/saved/recipecard"
+import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 
-export default function SavedGallery() {
-  const [gallery, setGallery] = useState<Recipe[]>();
-  const query = useGalleryStore((state) => state.query);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`/api/collections?query=${query}`, {});
-      if (!response.ok) {
-        throw new Error("Failed to fetch");
-      }
-      const responseData = await response.json();
-      setGallery(responseData.recipes);
-      console.log(responseData.recipes);
+export default function SavedGallery({
+  recipes,
+  className,
+  ...props
+}: {
+  recipes: (Recipe & { id: string } & {
+    user: {
+      id: number;
+      name: string;
+      email: string;
+      image: string;
     };
-    fetchData();
-  }, [query]);
+  })[];
+} & React.HTMLAttributes<HTMLDivElement>) {
+  const { active } = useNavbarStore((state) => state);
   return (
-    <div className="h-full grow">
-      {gallery?.map((recipe, index: number) => (<div key={index}>{recipe.title}</div>))}
+    <div className="flex flex-wrap gap-4">
+      {recipes?.map((recipe, index: number) => (
+        <RecipeCard
+          variant={active ? "list" : "portrait"}
+          recipe={recipe}
+          key={index}
+        />
+      ))}
     </div>
   );
 }

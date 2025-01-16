@@ -4,17 +4,37 @@ import { pool as db } from "../utils/db";
 
 export async function getFilteredUserSavedRecipes(query: string, userid: number) {
   const stmt = `
-  SELECT json_agg(r.*) as recipes
+  SELECT json_agg(
+    json_build_object(
+      'id', r.id,
+      'title', r.title,
+      'images', r.images,
+      'description', r.description,
+      'instructions', r.instructions,
+      'date_created', r.date_created,
+      'date_updated', r.date_updated,
+      'public', r.public,
+      'ingredients', r.ingredients,
+      'info', r.info,
+      'category', r.category,
+      'user', json_build_object(
+        'id', u.id,
+        'name', u.name,
+        'email', u.email,
+        'image', u.image
+      )
+    )
+  ) as recipes
   FROM collections c
-  LEFT JOIN recipes r
-  ON r.id = ANY(c.recipesid)
+  LEFT JOIN recipes r ON r.id = ANY(c.recipesid)
+  LEFT JOIN users u ON r.userid = u.id
   WHERE c.userid = $1 
   AND c.name ILIKE $2
   GROUP BY c.id;
   `;
 
   const result = await db.query(stmt, [userid, query]);
-  return result.rows;
+  return result.rows[0];
 }
 
 export async function getUserCollections(userid: number) {

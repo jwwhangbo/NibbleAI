@@ -5,7 +5,7 @@ export type NavbarState = {
 }
 
 export type NavbarActions = {
-    setActive: () => void
+    setActive: (param?:boolean) => void
 }
 
 export type NavbarStore = NavbarState & NavbarActions
@@ -19,6 +19,6 @@ export const createNavbarStore = (
 ) => {
     return createStore<NavbarStore>()((set) => ({
         ...initState,
-        setActive: () => set((state) => ({ active: !state.active}))
+        setActive: (param) => set((state) => ({ active: param ? param : !state.active }))
     }))
 }

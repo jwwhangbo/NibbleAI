@@ -1,11 +1,23 @@
 import { auth } from "@/auth";
+import SavedGallery from "@/components/saved/gallery";
 import { Recipe } from "@/lib/types";
 import { getFilteredUserSavedRecipes } from "@/src/controllers/CollectionController";
-import { getAllUserRecipes } from "@/src/controllers/RecipeController"
+import { getAllUserRecipes } from "@/src/controllers/RecipeController";
 
-export default async function Page({ params } : { params: Promise<{ collection:string}>}) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ collection: string }>;
+}) {
+  
+  const session = await auth();
+  if (!session) {
+    throw new Error("Unauthorized request");
+  }
+  
   const collection = (await params).collection;
-  if (collection === 'myrecipe') {
+
+  if (collection === "myrecipe") {
     const userRecipes = await getAllUserRecipes();
     return (
       <div className="w-full">
@@ -21,16 +33,18 @@ export default async function Page({ params } : { params: Promise<{ collection:s
       </div>
     );
   }
-  const session = await auth();
-  if (!session) {
-    throw new Error("Unauthorized request")
-  }
-  const result = await getFilteredUserSavedRecipes(decodeURIComponent(collection), session.user.id);
-  const recipes : (Recipe & {id: number})[] = result[0].recipes;
-  return (
-    <div className="flex flex-col">
-      {!recipes.length ? <p>No Recipes Found</p> :
-      <div>{recipes.map((recipe) => <p key={`recipe-${recipe.id}`}>{recipe.title}</p>)}</div>}
-    </div>
+
+  const result = await getFilteredUserSavedRecipes(
+    decodeURIComponent(collection),
+    session.user.id
   );
+  const recipes: (Recipe & { id: string } & {
+    user: {
+      id: number;
+      name: string;
+      email: string;
+      image: string;
+    };
+  })[] = result.recipes;
+  return (<div className="mt-2 overflow-y-scroll h-full"><SavedGallery recipes={recipes} /></div>);
 }

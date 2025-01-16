@@ -1,42 +1,58 @@
-'use client';
-import { addRecipetoNocategory, removeLikedRecipe } from "@/src/controllers/CollectionController";
+"use client";
+import {
+  addRecipetoNocategory,
+  removeLikedRecipe,
+} from "@/src/controllers/CollectionController";
 import { useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 // likeHeart.tsx
-const LikeHeart = ({ active, recipeId, ...props }: { active: boolean; recipeId: number } & React.HTMLAttributes<HTMLButtonElement>) => {
+const LikeHeart = ({
+  active,
+  recipeId,
+  ...props
+}: {
+  active: boolean;
+  recipeId: number;
+} & React.HTMLAttributes<HTMLButtonElement>) => {
   const [isactive, setIsactive] = useState<boolean>(active);
-  const handleLike = async (recipeId : number) => {
-    setIsactive(prev => !prev);
+
+  const handleLike = async (recipeId: number) => {
+    setIsactive((prev) => !prev);
     await addRecipetoNocategory(recipeId);
   };
   const handleUnlike = async (recipeId: number) => {
-    setIsactive(prev => !prev);
+    setIsactive((prev) => !prev);
     await removeLikedRecipe(recipeId);
-  }
+  };
+
+  const handleClick = () => {
+    // e.stopPropagation();
+    // e.preventDefault();
+    if (isactive) {
+      handleUnlike(recipeId);
+    } else {
+      handleLike(recipeId);
+    }
+  };
+  const debouncedHandleClick = useDebouncedCallback(handleClick, 300);
+
   return (
     <button
       {...props}
-      onClick={
-        !isactive
-          ? (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              handleLike(recipeId);
-            }
-          : (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              handleUnlike(recipeId);
-            }
-      }
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        debouncedHandleClick();
+      }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        fill={isactive ? "white" : "rgba(60,60,60,0.5)"}
+        fill={isactive ? "red" : "none"}
         viewBox="0 0 24 24"
         strokeWidth={1.5}
-        stroke="none"
-        className="relative block m-auto size-10"
+        stroke="black"
+        className="relative block m-auto size-6 hover:fill-red-200"
       >
         <path
           strokeLinecap="round"

@@ -7,7 +7,7 @@ import { Suspense } from "react";
 
 const NavbarUserProfileWrapper = async ({userid, ...props} : {userid: number} & React.HTMLAttributes<HTMLDivElement>) => {
   const userInfo = await getUserInfo(userid);
-  return <NavbarUserProfile {...props} userImage={userInfo.image} userId={userid} userName={userInfo.name || userInfo.email} />;
+  return <NavbarUserProfile {...props} user={userInfo} />;
 };
 
 export default async function Page(props: {
@@ -19,7 +19,6 @@ export default async function Page(props: {
   }
 
   const recipe = await getRecipe(recipeId);
-  console.log(recipe);
   if (!recipe || !recipe.public) {
     throw new Error("Could not find recipe");
   }

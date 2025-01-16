@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 export default function Navlinks() {
   const path = usePathname();
   const startsWith = path.split('/')[1];
-  console.log(startsWith);
 
   return (
     <div className="hidden sm:flex m-auto items-center gap-2 h-[50px] max-w-[1200px] *:py-2 *:px-4 px-[30px] *:rounded-lg">

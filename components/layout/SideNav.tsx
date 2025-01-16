@@ -20,9 +20,7 @@ export default function SideNavbar() {
       {userData ? (
         <UserProfile
           className="flex items-center w-full h-[56px] bg-white border-b-2"
-          userId={userData.id}
-          userImage={userData.image}
-          userName={userData.name || userData.email}
+          user={userData}
         />
       ) : (
         <UserProfileSkeleton className="flex items-center w-full h-[56px] bg-white border-b-2" />
