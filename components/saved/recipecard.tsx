@@ -27,27 +27,28 @@ export default function RecipeCard({
   return (
     <div
       className={`group flex gap-3 ${
-        isPortraitMode ? "flex-col" : "flex-row"
+        isPortraitMode ? "flex-col" : "flex-row grow"
       } overflow-hidden ${
         isPortraitMode && "sm:aspect-[3/4] aspect-[1/1] sm:w-[242px]"
       } `}
     >
-      <div
-        className={`relative ${
-          isPortraitMode ? "w-full aspect-[5/3]" : "h-full aspect-[1/1]"
-        }`}
-      >
-        <Link href={`/recipes?id=${recipe.id.toString()}`}>
+      <Link href={`/recipes?id=${recipe.id.toString()}`}>
+        <div
+          className={`relative ${
+            isPortraitMode ? "w-full aspect-[5/3]" : "h-full aspect-[1/1]"
+          }`}
+        >
           <Image
             src={`${r2ap}/category_default/${recipe.category.categoryA}.jpg`}
             fill
-            objectFit="cover"
             alt="recipe thumbnail"
+            sizes="(max-width: 768px) 512px"
+            style={{objectFit:"cover"}}
           />
-        </Link>
-      </div>
+        </div>
+      </Link>
       <div className="h-auto gap-1">
-        <p className="line-clamp-2">
+        <p className={isPortraitMode ? "line-clamp-2" : "line-clamp-1 overflow-ellipsis"}>
           <strong>{recipe.title}</strong>
         </p>
         <UserProfile

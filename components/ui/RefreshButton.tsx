@@ -11,7 +11,7 @@ export default function RefreshButton() {
   }, null)
   const nextrouter = useRouter()
   return (
-    <form action={action}>
+    <form action={action} title="Regenerate recipes">
       <button
         className="flex justify-center items-center p-2"
         type="submit"

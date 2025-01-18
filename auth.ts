@@ -5,13 +5,10 @@ import type { Provider } from "next-auth/providers";
 import { sendVerificationRequest } from "./lib/authSendRequest";
 import { logoMap } from "./lib/utils";
 import { pool } from "./src/utils/db";
+import { revalidatePath } from "next/cache";
 
 const providers: Provider[] = [
-  Google({
-    profile(profile) {
-      return { role: profile.role ?? "user" };
-    },
-  }),
+  Google,
   {
     id: "http-email",
     name: "Email",
@@ -53,6 +50,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
       session({ session, user }) {
         session.user.id = user.id;
+        session.user.name = user.name;
+        session.user.image = user.image;
         session.user.role = user.role;
         return session;
       },
@@ -69,9 +68,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return true;
       },
     },
+    events: {
+      async signIn() {
+        'use client';
+        await revalidatePath('/auth/signin');
+      }
+    },
     providers,
     pages: {
-      signIn: "/signin",
-      newUser: "/newuser",
+      signIn: "/auth/signin",
+      newUser: "/auth/newuser",
+      error: "/auth/error"
     },
 });

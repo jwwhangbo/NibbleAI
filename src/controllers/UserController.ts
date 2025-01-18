@@ -34,6 +34,11 @@ export async function updateUserPreference(responseBody: ResponseBody) {
   }
 }
 
+export async function updateUsername(userid: string, name: string) {
+  const query = "UPDATE users SET name = $1 WHERE id = $2";
+  await db.query(query, [name, userid]);
+}
+
 export async function getUserPreference(userid: number) : Promise<Record<string, unknown>> {
   try {
     const stmt = "SELECT preference FROM users WHERE id = $1";

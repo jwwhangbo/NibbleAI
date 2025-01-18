@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import SideNavbar from "@/components/layout/SideNav";
 import TopNavbar from "@/components/layout/TopNavbar";
 import { NavbarStoreProvider } from "@/src/providers/navbar-store-provider";
@@ -8,8 +9,9 @@ export default async function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <NavbarStoreProvider>
         <TopNavbar />
         <SideNavbar />

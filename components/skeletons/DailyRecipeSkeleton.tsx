@@ -3,9 +3,9 @@ import RecipeCardSkeleton from "./recipeCardSkeleton";
 
 export default function DailyRecipeSkeleton() {
   return (
-    <div className="w-full flex flex-col justify-center relative">
+    <div className="w-full flex flex-col gap-3 justify-center relative">
       <div className="flex justify-between items-center h-[56px]">
-        <h2 className="text-2xl h-fit">Recommended Recipes</h2>
+        <h2 className="text-2xl font-bold h-fit">Recommended Recipes</h2>
       </div>
       <div className="flex flex-row flex-wrap sm:flex-nowrap gap-[16px] justify-center">
         <RecipeCardSkeleton />

@@ -21,13 +21,30 @@ export default function UserProfile({
   user,
   logoOnly = false,
   logoSize = "md",
+  disabled = false,
   ...props
 }: {
   user: UserProps;
   logoOnly?: boolean;
+  disabled?: boolean;
 } & React.HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof logoVariants>) {
   const { image, name, id, email } = user;
+  if (disabled) {
+    return (
+      <div {...props}>
+        <Image
+            className={cn(logoVariants({ logoSize }))}
+            src={image || defaultUserImage}
+            alt="User avatar"
+            width="32"
+            height="32"
+            style={{ objectFit: "cover" }}
+          />
+          {!logoOnly && <span>{name || email}</span>}
+      </div>
+    );
+  }
   return (
     <div {...props}>
       <Link

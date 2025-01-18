@@ -13,13 +13,14 @@ export default function SideNavbar() {
   return (
     <div
       className={clsx([
-        "sm:hidden fixed shadow-inner h-screen w-[247px] bg-white flex-shrink-0 transition ease-in-out pointer-events-auto z-10",
+        "sm:hidden fixed shadow-inner h-screen w-[247px] bg-white flex-shrink-0 transition-transform duration-75 z-10",
         { "-translate-x-[247px]": !active },
       ])}
     >
       {userData ? (
         <UserProfile
-          className="flex items-center w-full h-[56px] bg-white border-b-2"
+          className="flex justify-start items-center w-full px-4 h-[56px] bg-white border-b-2 m-auto gap-2"
+          disabled
           user={userData}
         />
       ) : (

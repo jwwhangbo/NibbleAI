@@ -18,7 +18,10 @@ export const createNavbarStore = (
     initState : NavbarState = defaultNavbarState,
 ) => {
     return createStore<NavbarStore>()((set) => ({
-        ...initState,
-        setActive: (param) => set((state) => ({ active: param ? param : !state.active }))
-    }))
+      ...initState,
+      setActive: (param) =>
+        set((state) => ({
+          active: param !== undefined ? param : !state.active,
+        })),
+    }));
 }

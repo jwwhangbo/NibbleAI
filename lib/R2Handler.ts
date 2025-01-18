@@ -7,7 +7,7 @@ export async function Upload(resource: File, key: string) : Promise<string> {
   if (!process.env.R2_AUTH_HEADER_KEY) {
     throw new Error("failed to find authentication key for r2 storage");
   }
-  if (!process.env.R2_AP) {
+  if (!process.env.NEXT_PUBLIC_R2_AP) {
     throw new Error('failed to find R2 access point')
   }
   const requestUrl = new URL(key, process.env.R2_WORKER_AP);
@@ -24,5 +24,5 @@ export async function Upload(resource: File, key: string) : Promise<string> {
     throw new Error("Failed to upload content");
   }
 
-  return new URL(key, process.env.R2_AP).toString();
+  return new URL(key, process.env.NEXT_PUBLIC_R2_AP).toString();
 }

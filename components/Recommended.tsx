@@ -12,9 +12,9 @@ export default async function Recommended() {
   const favorites = await getAllUserSavedRecipes(userid);
   
   return (
-    <div className="w-full flex flex-col justify-center">
+    <div className="w-full flex flex-col gap-3 justify-center">
       <div className="flex justify-between items-center py-2">
-        <h2 className="text-2xl h-fit">Recommended Recipes</h2>
+        <h2 className="text-2xl h-fit font-bold">Recommended Recipes</h2>
         <RefreshButton />
       </div>
       <div className="flex flex-row flex-wrap sm:flex-nowrap gap-[16px] justify-center">
