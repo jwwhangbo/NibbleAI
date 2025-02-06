@@ -16,7 +16,7 @@ export default async function Layout({
         <TopNavbar />
         <SideNavbar />
       </NavbarStoreProvider>
-      <div className="pt-[56px] sm:pt-[106px] max-w-[1200px] mx-auto">
+      <div className="pt-[56px] sm:pt-[156px] max-w-[1200px] mx-auto">
         {children}
       </div>
     </SessionProvider>

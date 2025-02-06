@@ -11,7 +11,7 @@ export default async function Layout({
   const userid = session?.user?.id;
   const collections = getUserCollections(userid);
   return (
-    <div className="flex flex-col sm:flex-row h-[calc(100dvh-56px)] sm:h-[calc(100dvh-106px)]">
+    <div className="flex flex-col sm:flex-row h-[calc(100dvh-56px)] sm:h-[calc(100dvh-156px)]">
       <SavedSidebar collectionPromise={collections} />
       {children}
     </div>

@@ -1,6 +1,7 @@
 "use server";
 import UserProfileSkeleton from "@/components/skeletons/UserProfileSkeleton";
 import NavbarUserProfile from "@/components/ui/userProfile";
+import { Recipe } from "@/lib/types";
 import { getRecipe } from "@/src/controllers/RecipeController";
 import { getUserInfo } from "@/src/controllers/UserController";
 import { Suspense } from "react";
@@ -18,7 +19,7 @@ export default async function Page(props: {
     throw new Error("Could not find recipe");
   }
 
-  const recipe = await getRecipe(recipeId);
+  const recipe : Recipe & {id:string} = await getRecipe(recipeId);
   if (!recipe || !recipe.public) {
     throw new Error("Could not find recipe");
   }
@@ -45,8 +46,8 @@ export default async function Page(props: {
       </ul>
       <h2 className="text-2xl">Instructions</h2>
       <ol className="list-decimal list-inside indent-4">
-        {recipe.instructions.map((entry: string, index: number) => (
-          <li key={index}>{entry}</li>
+        {recipe.instructions.map((entry, index: number) => (
+          <li key={index}>{entry.step}</li>
         ))}
       </ol>
     </div>

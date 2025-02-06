@@ -37,9 +37,9 @@ export type ResponseBody = {
 };
 
 export type Recipe = {
-  userId: number;
+  userid: number;
   title: string;
-  category: {categoryA: string, categoryB: string, dietary: string};
+  category: {categoryA: string, categoryB: string, dietary?: string | undefined};
   info?: {total_time: string, servings: string};
   images: string[];
   description: string;
@@ -48,7 +48,7 @@ export type Recipe = {
     quantity: number;
     unit: string;
   }[];
-  instructions: string[];
+  instructions: {step:string, image:string}[];
   date_created: Date;
   public: boolean;
 };

@@ -35,7 +35,7 @@ export default function UserProfile({
       <div {...props}>
         <Image
             className={cn(logoVariants({ logoSize }))}
-            src={image || defaultUserImage}
+            src={user.image || defaultUserImage}
             alt="User avatar"
             width="32"
             height="32"

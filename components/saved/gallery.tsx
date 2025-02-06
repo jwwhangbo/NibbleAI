@@ -6,8 +6,6 @@ import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 
 export default function SavedGallery({
   recipes,
-  className,
-  ...props
 }: {
   recipes: (Recipe & { id: string } & {
     user: {

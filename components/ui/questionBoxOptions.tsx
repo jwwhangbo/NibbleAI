@@ -5,7 +5,7 @@ export default function QuestionBoxOptions({ className, question, opt, idx }: { 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
-    if (e.key === " ") { // TODO: fix interruption with text input
+    if (e.key === " ") { // [ ]: fix interruption with text input
       // e.preventDefault();
       // if (inputRef.current) {
       //   inputRef.current.click();

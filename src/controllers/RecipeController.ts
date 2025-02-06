@@ -3,7 +3,7 @@ import { pool as db } from "@/src/utils/db";
 import { type Recipe } from "@/lib/types";
 import { auth } from "@/auth";
 import { PoolClient } from "@neondatabase/serverless";
-import { GenerateUserRecipes } from "./AiController";
+import { GeneratedRecipe, GenerateUserRecipes } from "./AiController";
 
 /**
  * returns the generated recipe ids for a user
@@ -101,26 +101,24 @@ export async function fetchGeneratedRecipes(userId : number) {
   const generatedRecipes = await getGeneratedRecipes(userId);
   const time = new Date();
   if (generatedRecipes.length === 0) {
-    const recipes = JSON.parse(await GenerateUserRecipes(userId)).recipes;
+    const recipes : GeneratedRecipe["recipes"] = JSON.parse(await GenerateUserRecipes(userId)).recipes;
     const client = await db.connect();
-    const insertIds: number[] = [];
 
-    for (const recipe of recipes) { // Cast generated recipes into db format
-      const recipeDbFormat: Recipe = {
-        userId: 1,
-        info: recipe.recipe_information,
-        category: recipe.recipe_category,
-        title: recipe.recipe_name,
-        images: [],
-        description: recipe.recipe_description,
-        ingredients: recipe.major_ingredients,
-        instructions: recipe.detailed_instruction,
-        date_created: time,
-        public: true,
-      };
-      const recipeId = await addRecipe(recipeDbFormat, client);
-      insertIds.push(recipeId);
-    }
+    const formattedRecipes: Recipe[] = recipes.map(recipe => ({
+      userid: 1,
+      info: recipe.recipe_information,
+      category: recipe.recipe_category,
+      title: recipe.recipe_name,
+      images: [],
+      description: recipe.recipe_description,
+      ingredients: recipe.major_ingredients,
+      instructions: recipe.detailed_instruction,
+      date_created: time,
+      public: true,
+    }));
+
+    const insertIds = await addRecipe(formattedRecipes, client);
+
     const results = await client.query(
       "SELECT recipesid FROM recipes_generated WHERE userId = $1",
       [userId]
@@ -174,15 +172,18 @@ export async function removeRecipe(
 }
 
 export async function addRecipe(
-  recipe: Recipe,
+  recipe: Recipe | Recipe[],
   client?: PoolClient
-): Promise<number> {
+): Promise<number | number[]> {
+  const recipes = Array.isArray(recipe) ? recipe : [recipe];
+
   const query = `
     INSERT INTO recipes (userid, title, category, info, images, description, ingredients, instructions, date_created, public)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    VALUES ${recipes.map((_, i) => `($${i * 10 + 1}, $${i * 10 + 2}, $${i * 10 + 3}, $${i * 10 + 4}, $${i * 10 + 5}, $${i * 10 + 6}, $${i * 10 + 7}, $${i * 10 + 8}, $${i * 10 + 9}, $${i * 10 + 10})`).join(", ")}
   RETURNING id`;
-  const values = [
-    recipe.userId,
+
+  const values = recipes.flatMap(recipe => [
+    recipe.userid,
     recipe.title,
     recipe.category,
     recipe.info ?? null,
@@ -192,12 +193,15 @@ export async function addRecipe(
     recipe.instructions,
     recipe.date_created,
     recipe.public,
-  ];
+  ]);
+
   const results = client
     ? await client.query(query, values)
     : await db.query(query, values);
 
-  return results.rows[0]?.id;
+  const ids = results.rows.map(row => row.id);
+
+  return Array.isArray(recipe) ? ids : ids[0];
 }
 
 export async function updateRecipe(recipeId: number, recipe: Recipe) {

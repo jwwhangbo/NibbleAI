@@ -43,7 +43,7 @@ export default function RecipeCard({
             fill
             alt="recipe thumbnail"
             sizes="(max-width: 768px) 512px"
-            style={{objectFit:"cover"}}
+            style={{objectFit:"cover", zIndex:-10}}
           />
         </div>
       </Link>

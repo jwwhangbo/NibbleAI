@@ -3,7 +3,7 @@ import { NavbarStoreProvider } from '@/src/providers/navbar-store-provider';
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="shrink overflow-hidden flex flex-col w-full px-2">
+    <div className="shrink overflow-hidden flex flex-col w-full px-2 h-full">
       <NavbarStoreProvider>
         <HeaderActions />
         {children}

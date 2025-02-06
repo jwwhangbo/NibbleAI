@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import LoadingIndicator from "../ui/LoadingIndicator";
-import { signIn } from "next-auth/react"; // TODO: use this instead
+import { signIn } from "next-auth/react"; // FIXME: use this instead
 
 export default function EmailSigninHandler({
   callbackUrl,

@@ -58,14 +58,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       authorized: async ({ request: { nextUrl }, auth }) => {
         // Logged in users are authenticated, otherwise redirect to login page
         const isLoggedIn = !!auth?.user;
-        const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-        if (isOnDashboard) {
-          if (isLoggedIn) return true;
-          return false; // Redirect unauthenticated users to login page
-        } else if (isLoggedIn) {
-          // return Response.redirect(new URL("/dashboard", nextUrl)); // TODO: fix this to allow for flexible url routing
+        // const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+        if (isLoggedIn) {
+          return true;
         }
-        return true;
+        return false;
       },
     },
     events: {

@@ -41,10 +41,12 @@ function html(info: {expires: Date, url: string, to:string}) {
             >
               <tr>
                 <td align="center">
-                  <img
-                    src="https://pub-d1a8b5717b5b4146bf4495d7fdd8a0bd.r2.dev/logo_v2.png"
-                    style="width: 250px"
-                  />
+                  <a href="https://nibble.ai">
+                    <img
+                      src="https://pub-d1a8b5717b5b4146bf4495d7fdd8a0bd.r2.dev/logo_v2.png"
+                      style="width: 250px"
+                    />
+                  </a>
                 </td>
               </tr>
               <tr>

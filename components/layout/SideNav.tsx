@@ -3,13 +3,12 @@ import UserProfile from "@/components/ui/userProfile";
 import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
-import UserProfileSkeleton from "@/components/skeletons/UserProfileSkeleton";
 import Link from "next/link";
 
 export default function SideNavbar() {
   const { active } = useNavbarStore((state) => state);
-  const session = useSession();
-  const userData = session?.data?.user;
+  const {data : session} = useSession();
+  const userData = session?.user;
   return (
     <div
       className={clsx([
@@ -24,7 +23,7 @@ export default function SideNavbar() {
           user={userData}
         />
       ) : (
-        <UserProfileSkeleton className="flex items-center w-full h-[56px] bg-white border-b-2" />
+        <Link href="/signin" className="block font-bold w-full flex justify-center items-center px-4 h-[56px] border-b-2">Sign in</Link>
       )}
 
       <ul className="py-2 flex flex-col gap-2 *:mx-2 *:rounded-lg hover:*:bg-gray-200 *:transition *:transitiion-duration-100">
@@ -41,7 +40,7 @@ export default function SideNavbar() {
             Saved Recipes
           </Link>
         </li>
-        <li>Support</li>
+        <li className="py-3 px-2">Support</li>
       </ul>
     </div>
   );

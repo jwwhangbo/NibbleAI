@@ -20,11 +20,11 @@ export default function TopNavbar() {
   return (
     <div
       className={clsx([
-        "bg-white fixed w-screen min-w-[375px] h-fit pointer-events-auto transition ease-in-out",
+        "bg-white fixed w-screen min-w-[375px] h-fit pointer-events-auto transition ease-in-out z-10",
         { "translate-x-[247px]": navbarStore.active },
       ])}
     >
-      <div className="relative m-auto flex w-full max-w-[1200px] h-[56px] px-[17px] sm:px-[30px] justify-between items-center">
+      <div className="relative m-auto flex w-full max-w-[1200px] h-[56px] sm:h-[100px] px-[17px] sm:px-[30px] justify-between items-center">
         <HamburgerButton className="sm:!hidden" />
         <Image
           src={logoLandscape}
@@ -34,7 +34,7 @@ export default function TopNavbar() {
           // style={{ width: "auto", height: "auto" }}
           quality={100}
           priority={true}
-          className="h-3/4 w-auto hidden sm:block"
+          className="h-2/5 w-auto hidden sm:block"
         />
         <Image
           src={logoOnly}
@@ -48,10 +48,7 @@ export default function TopNavbar() {
         />
         <div className="flex gap-4 items-center">
           {!onSearch ? (
-            <Link href={"/search"}>
-              <label htmlFor="search" className="sr-only">
-                search
-              </label>
+            <Link href={"/search"} title="search">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

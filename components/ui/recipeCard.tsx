@@ -14,7 +14,7 @@ export default function RecipeCard(props: {
   return (
     <div className="group grow overflow-hidden sm:basis-1/4">
       <Link href={`/recipes?id=${props.id}`} className="flex flex-col gap-4 ">
-        <div className="relative w-full aspect-[5/3] -z-10x ">
+        <div className="relative w-full aspect-[5/3]">
           <Image
             src={
               `${r2ap}/category_default/${props.category.categoryA}.jpg` ||

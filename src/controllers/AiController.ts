@@ -5,6 +5,7 @@ import { type ResponseBody } from "@/lib/types";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { getUserPreference } from "./UserController";
+import { catA, catB, dietary } from "../categories"; // Import categories
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -38,38 +39,6 @@ const UserPreference = z.object({
   }),
 });
 
-const catA: [string, ...string[]] = [
-  "breakfast",
-  "lunch",
-  "dinner",
-  "appetizers",
-  "snacks",
-  "desserts",
-  "soups_stews",
-  "salads",
-  "main_courses",
-  "side_dishes",
-  "beverages",
-  "baking",
-  "quick_easy",
-  "holiday_festive",
-  "comfort_food",
-  "healthy"
-];
-
-const catB: [string, ...string[]] = [
-  "asian",
-  "european",
-  "middle eastern",
-  "african",
-  "latin american",
-  "north american",
-  "caribbean",
-  "pacific island",
-];
-
-const dietary: [string, ...string[]] = ["vegetarian", "vegan", "gluten-free"];
-
 const category = z.object({
   categoryA: z.enum(catA),
   categoryB: z.enum(catB),
@@ -93,7 +62,12 @@ const RecipeSchema = z.object({
           unit: z.string(),
         })
       ),
-      detailed_instruction: z.array(z.string()),
+      detailed_instruction: z.array(
+        z.object({
+          step: z.string(),
+          image: z.enum([""]),
+        })
+      ),
     })
   ),
 });
@@ -135,7 +109,9 @@ export async function GenerateUserRecipes(userid : number) : Promise<string>{
           "cheese",
           "chili paste",
           "oil",
-          "is in ingredients, provide specific name",
+          "is in ingredients, provide specific name.",
+          "Use real, existing recipes instead of making inspired recipes",
+          "Generate between 7 to 11 detailed_instruction."
         ].join(" "),
       },
       { role: "user", content: JSON.stringify(userPreference) },
