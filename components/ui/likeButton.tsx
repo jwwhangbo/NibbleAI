@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 // likeHeart.tsx
-const LikeHeart = ({
+const LikeButton = ({
   active,
   recipeId,
   ...props
@@ -64,4 +64,4 @@ const LikeHeart = ({
   );
 };
 
-export default LikeHeart;
+export default LikeButton;

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Placeholder from "@/public/landscape-placeholder.png";
-import LikeHeart from "./likeHeart";
+import LikeButton from "./likeButton";
 import Link from "next/link";
 
 export default function RecipeCard(props: {
@@ -24,7 +24,7 @@ export default function RecipeCard(props: {
             alt="recipe thumbnail"
           />
           <div className="absolute m-2 bottom-0 right-0 flex flex-col gap-2">
-            <LikeHeart
+            <LikeButton
               className="p-1 rounded-full bg-white"
               active={props.saved}
               recipeId={props.id}
