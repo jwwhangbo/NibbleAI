@@ -11,7 +11,7 @@ import {
   extractClosestEdge,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
-import { GetIngredientData, isIngredientData } from "../ingredientsHandler";
+import { GetIngredientData, isIngredientData } from "./ingredientsHandler";
 import DragIndicator from "@/components/ui/dragIndicator";
 
 export type TIngredient = {
@@ -132,14 +132,14 @@ export default function IngredientForm({
           e.preventDefault();
           setIngredient((prev) => ({ ...prev, ingredient: e.target.value }));
         }}
-        name={`ingredient-${id}`}
+        name={`ingredient-${index}`}
         className="px-4 py-2 flex-auto rounded-md min-w-0 border-2 focus:outline-none focus:ring focus:border-blue-500"
       />
       <input
         type="text"
         placeholder="Quantity"
         value={quantity}
-        name={`quantity-${id}`}
+        name={`quantity-${index}`}
         className="px-4 py-2 rounded-md flex-initial min-w-0 border-2 focus:outline-none focus:ring focus:border-blue-500"
         onChange={(e) => {
           e.preventDefault();
@@ -150,7 +150,7 @@ export default function IngredientForm({
         type="text"
         placeholder="Unit"
         value={units}
-        name={`units-${id}`}
+        name={`units-${index}`}
         className="px-4 py-2 flex-auto rounded-md border-2 min-w-0 focus:outline-none focus:ring focus:border-blue-500"
         onChange={(e) => {
           e.preventDefault();
