@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import IngredientForm, { type TIngredient } from "./add/ingredientForm";
+import IngredientForm, { type TIngredient } from "./ingredientForm";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
@@ -125,7 +125,7 @@ export default function IngredientsHandler() {
             createNewIngredientEntry(),
           ]);
         }}
-        className="border-2 w-fit rounded-full border-black p-1 m-auto"
+        className="border-2 w-fit rounded-full border-black p-1 m-auto hover:bg-gray-200"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
