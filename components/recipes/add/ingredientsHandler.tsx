@@ -8,30 +8,44 @@ import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/r
 const ingredientKey = Symbol("ingredientKey");
 
 type IngredientData = {
-    [ingredientKey] : true,
-    ingredient: TIngredient,
-    index: number,
-    instanceid: symbol
-  }
+  [ingredientKey]: true;
+  ingredient: TIngredient;
+  index: number;
+  instanceid: symbol;
+};
 
+/**
+ * Returns an IngredientData object.
+ * @param ingredient - The ingredient object.
+ * @param index - The index of the ingredient.
+ * @param instanceid - The instance ID symbol.
+ * @returns The IngredientData object.
+ */
 export function GetIngredientData({
+  ingredient,
+  index,
+  instanceid,
+}: {
+  ingredient: TIngredient;
+  index: number;
+  instanceid: symbol;
+}): IngredientData {
+  return {
+    [ingredientKey]: true,
     ingredient,
     index,
     instanceid,
-  }: {
-    ingredient: TIngredient;
-    index: number;
-    instanceid: symbol;
-  }): IngredientData {
-    return {
-      [ingredientKey]: true,
-      ingredient,
-      index,
-      instanceid,
-    };
-  }
+  };
+}
 
-export function isIngredientData(data: Record<string | symbol, unknown>): data is IngredientData {
+/**
+ * Checks if the given data is of type IngredientData.
+ * @param data - The data to check.
+ * @returns True if the data is IngredientData, false otherwise.
+ */
+export function isIngredientData(
+  data: Record<string | symbol, unknown>
+): data is IngredientData {
   return data[ingredientKey] == true;
 }
 
@@ -47,11 +61,16 @@ export default function IngredientsHandler() {
       units: "",
     }))
   );
+
+  /**
+   * Creates a new ingredient entry.
+   * @returns The new ingredient entry.
+   */
   const createNewIngredientEntry = (() => {
     setMaxId((prevMaxId) => prevMaxId + 1);
     return { id: maxId, ingredient: "", quantity: "", units: "" };
   });
-  
+
   useEffect(() => {
     return monitorForElements({
       canMonitor({ source }) {
@@ -76,22 +95,24 @@ export default function IngredientsHandler() {
         }
         const closestEdgeOfTarget = extractClosestEdge(targetData);
 
-        setIngredients((prevState) => reorderWithEdge({
-          list: prevState,
-          startIndex: sourceData.index,
-          indexOfTarget,
-          closestEdgeOfTarget,
-          axis: "vertical",
-        }));
-      }
-    })
-  }, [ingredients, instanceId])
+        setIngredients((prevState) =>
+          reorderWithEdge({
+            list: prevState,
+            startIndex: sourceData.index,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
+          })
+        );
+      },
+    });
+  }, [ingredients, instanceId]);
 
   useEffect(() => {
     if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({behavior:"smooth", block:"end"})
+      bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
-  },[maxId]);
+  }, [maxId]);
 
   return (
     <div className="flex flex-col">

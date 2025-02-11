@@ -6,10 +6,18 @@ export default function RecipeImageHandler({ name }: { name: string }) {
   const [image, setImage] = useState<string | undefined>();
   const [dragover, setDragover] = useState<boolean>(false);
 
+  /**
+   * Handles the drag over event to prevent default behavior.
+   * @param e - The drag event.
+   */
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
+  /**
+   * Handles the drop capture event to set the file input with the dropped file.
+   * @param e - The drag event.
+   */
   const handleDropCapture = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setDragover(false);
@@ -25,18 +33,30 @@ export default function RecipeImageHandler({ name }: { name: string }) {
     }
   };
 
+  /**
+   * Handles the drag enter event to set the dragover state.
+   * @param e - The drag event.
+   */
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     if (e.dataTransfer.items && e.dataTransfer.items[0]?.kind === "file") {
       setDragover(true);
     }
   };
 
+  /**
+   * Handles the drag leave event to unset the dragover state.
+   * @param e - The drag event.
+   */
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     if (!e.currentTarget.contains(e.relatedTarget as Node)) {
       setDragover(false);
     }
   };
 
+  /**
+   * Handles the file change event to read and set the image.
+   * @param e - The change event.
+   */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
