@@ -1,15 +1,44 @@
 "use client";
-import { useState } from "react";
-import IngredientForm from "./add/ingredientForm";
+import { useEffect, useRef, useState } from "react";
+import IngredientForm, { type TIngredient } from "./add/ingredientForm";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 
-export type TIngredient = {
-  id: number;
-  ingredient: string;
-  quantity: string;
-  units: string;
-};
+const ingredientKey = Symbol("ingredientKey");
+
+type IngredientData = {
+    [ingredientKey] : true,
+    ingredient: TIngredient,
+    index: number,
+    instanceid: symbol
+  }
+
+export function GetIngredientData({
+    ingredient,
+    index,
+    instanceid,
+  }: {
+    ingredient: TIngredient;
+    index: number;
+    instanceid: symbol;
+  }): IngredientData {
+    return {
+      [ingredientKey]: true,
+      ingredient,
+      index,
+      instanceid,
+    };
+  }
+
+export function isIngredientData(data: Record<string | symbol, unknown>): data is IngredientData {
+  return data[ingredientKey] == true;
+}
 
 export default function IngredientsHandler() {
+  const [maxId, setMaxId] = useState(3);
+  const [instanceId] = useState<symbol>(() => Symbol("instance-id"));
+  const bottomRef = useRef<HTMLDivElement | null>(null);
   const [ingredients, setIngredients] = useState<TIngredient[]>(
     Array.from({ length: 3 }, (_, i) => ({
       id: i,
@@ -19,12 +48,50 @@ export default function IngredientsHandler() {
     }))
   );
   const createNewIngredientEntry = (() => {
-    let maxIdx = 3;
+    setMaxId((prevMaxId) => prevMaxId + 1);
+    return { id: maxId, ingredient: "", quantity: "", units: "" };
+  });
+  
+  useEffect(() => {
+    return monitorForElements({
+      canMonitor({ source }) {
+        return isIngredientData(source.data) && source.data.instanceid === instanceId;
+      },
+      onDrop({ location, source }) {
+        const target = location.current.dropTargets[0];
+        if (!target) {
+          return;
+        }
 
-    return function createNewIngredientEntry(): TIngredient {
-      return { id: maxIdx++, ingredient: "", quantity: "", units: "" };
-    };
-  })();
+        const sourceData = source.data;
+        const targetData = target.data as IngredientData;
+        if (!isIngredientData(sourceData) || !isIngredientData(sourceData)) {
+          return;
+        }
+        const indexOfTarget = ingredients.findIndex(
+          (ingredient: TIngredient) => ingredient.id === targetData.ingredient.id
+        );
+        if (indexOfTarget < 0) {
+          return;
+        }
+        const closestEdgeOfTarget = extractClosestEdge(targetData);
+
+        setIngredients((prevState) => reorderWithEdge({
+          list: prevState,
+          startIndex: sourceData.index,
+          indexOfTarget,
+          closestEdgeOfTarget,
+          axis: "vertical",
+        }));
+      }
+    })
+  }, [ingredients, instanceId])
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({behavior:"smooth", block:"end"})
+    }
+  },[maxId]);
 
   return (
     <div className="flex flex-col">
@@ -33,6 +100,8 @@ export default function IngredientsHandler() {
           <IngredientForm
             key={index}
             ingredientprops={ingredient}
+            index={index}
+            instanceid={instanceId}
             setIngredient={(callback) =>
               setIngredients((prev) =>
                 prev.map((ing) =>
@@ -46,6 +115,7 @@ export default function IngredientsHandler() {
             }}
           />
         ))}
+        <div ref={bottomRef} className="w-full h-1"></div>
       </div>
       <button
         onClick={(e) => {

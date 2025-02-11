@@ -1,6 +1,11 @@
-export default function DragHandleButton() {
+import React from 'react';
+
+const DragHandleButton = React.forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <div className="w-fit h-fit p-[0.25rem] rounded-sm hover:bg-gray-100">
+    <div
+      ref={ref}
+      className="w-fit h-fit p-[0.25rem] rounded-sm hover:bg-gray-100 cursor-grab"
+    >
       <svg
         fill="#000000"
         viewBox="0 0 24 24"
@@ -14,4 +19,8 @@ export default function DragHandleButton() {
       </svg>
     </div>
   );
-}
+});
+
+DragHandleButton.displayName = 'DragHandleButton';
+
+export default DragHandleButton;
