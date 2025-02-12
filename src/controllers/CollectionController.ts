@@ -8,7 +8,7 @@ export async function getFilteredUserSavedRecipes(query: string, userid: number)
     json_build_object(
       'id', r.id,
       'title', r.title,
-      'images', r.images,
+      'thumbnail', r.thumbnail,
       'description', r.description,
       'instructions', r.instructions,
       'date_created', r.date_created,

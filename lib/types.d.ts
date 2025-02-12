@@ -41,7 +41,7 @@ export type Recipe = {
   title: string;
   category: {categoryA: string, categoryB: string, dietary?: string | undefined};
   info?: {total_time: string, servings: string};
-  images: string[];
+  thumbnail: string;
   description: string;
   ingredients: {
     ingredient: string;

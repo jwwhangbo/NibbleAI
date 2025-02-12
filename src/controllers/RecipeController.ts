@@ -25,12 +25,14 @@ async function getGeneratedRecipes(userid: number) {
 
 export async function getAllUserRecipes() {
   const session = await auth();
-  if (!session) {throw new Error('Not Authorized')}
+  if (!session) {
+    throw new Error("Not Authorized");
+  }
   const query = `
     SELECT *
     FROM recipes
     WHERE userId=$1;
-  `
+  `;
   const result = await db.query(query, [session.user.id]);
   return result.rows;
 }
@@ -53,13 +55,15 @@ export async function getRecipe(recipeId: number, client?: PoolClient) {
 }
 /**
  * matches the db against search keyword and returns results
- * @param query 
- * @param currentPage 
+ * @param query
+ * @param currentPage
  */
 export async function fetchQueriedRecipes(query: string, currentPage: number) {
   if (!query.trim()) {
     return []; // Return an empty array if the query is an empty string or only whitespace
   }
+
+  const offset = (currentPage - 1) * 6
 
   const stmt = `
     SELECT r.*, AVG(rt.rating_stars) as average_rating
@@ -69,18 +73,18 @@ export async function fetchQueriedRecipes(query: string, currentPage: number) {
     WHERE
       r.title ILIKE $1 OR
       r.description ILIKE $1 OR
-      EXISTS (SELECT 1 FROM unnest(r.instructions) AS instruction WHERE instruction ILIKE $1) OR
+      EXISTS (SELECT 1 FROM unnest(r.instructions) AS instruction WHERE instruction->> 'instruction' ILIKE $1::text) OR
       EXISTS (SELECT 1 FROM unnest(r.ingredients) AS ingredient WHERE ingredient->>'ingredient' ILIKE $1)
     GROUP BY 
       r.id
     ORDER BY r.id ASC
     LIMIT 6 OFFSET $2
   ;`;
-  const results = await db.query(stmt, [`%${query}%`, currentPage]);
+  const results = await db.query(stmt, [`%${query}%`, offset]);
   return results.rows;
 }
 
-export async function fetchRecipesPages(query: string) : Promise<number> {
+export async function fetchRecipesPages(query: string): Promise<number> {
   if (!query.trim()) {
     return 0; // Return an empty array if the query is an empty string or only whitespace
   }
@@ -90,26 +94,28 @@ export async function fetchRecipesPages(query: string) : Promise<number> {
     WHERE
       r.title ILIKE $1 OR
       r.description ILIKE $1 OR
-      EXISTS (SELECT 1 FROM unnest(r.instructions) AS instruction WHERE instruction ILIKE $1) OR
+      EXISTS (SELECT 1 FROM unnest(r.instructions) AS instruction WHERE instruction->> 'instruction' ILIKE $1::text) OR
       EXISTS (SELECT 1 FROM unnest(r.ingredients) AS ingredient WHERE ingredient->>'ingredient' ILIKE $1)
   `;
-  const results = await db.query(stmt,[`%${query}%`])
+  const results = await db.query(stmt, [`%${query}%`]);
   return results.rowCount ? Math.ceil(results.rowCount / 6) : 1;
 }
 
-export async function fetchGeneratedRecipes(userId : number) {
+export async function fetchGeneratedRecipes(userId: number) {
   const generatedRecipes = await getGeneratedRecipes(userId);
   const time = new Date();
   if (generatedRecipes.length === 0) {
-    const recipes : GeneratedRecipe["recipes"] = JSON.parse(await GenerateUserRecipes(userId)).recipes;
+    const recipes: GeneratedRecipe["recipes"] = JSON.parse(
+      await GenerateUserRecipes(userId)
+    ).recipes;
     const client = await db.connect();
 
-    const formattedRecipes: Recipe[] = recipes.map(recipe => ({
+    const formattedRecipes: Recipe[] = recipes.map((recipe) => ({
       userid: 1,
       info: recipe.recipe_information,
       category: recipe.recipe_category,
       title: recipe.recipe_name,
-      images: [],
+      thumbnail: "",
       description: recipe.recipe_description,
       ingredients: recipe.major_ingredients,
       instructions: recipe.detailed_instruction,
@@ -178,16 +184,25 @@ export async function addRecipe(
   const recipes = Array.isArray(recipe) ? recipe : [recipe];
 
   const query = `
-    INSERT INTO recipes (userid, title, category, info, images, description, ingredients, instructions, date_created, public)
-    VALUES ${recipes.map((_, i) => `($${i * 10 + 1}, $${i * 10 + 2}, $${i * 10 + 3}, $${i * 10 + 4}, $${i * 10 + 5}, $${i * 10 + 6}, $${i * 10 + 7}, $${i * 10 + 8}, $${i * 10 + 9}, $${i * 10 + 10})`).join(", ")}
+    INSERT INTO recipes (userid, title, category, info, thumbnail, description, ingredients, instructions, date_created, public)
+    VALUES ${recipes
+      .map(
+        (_, i) =>
+          `($${i * 10 + 1}, $${i * 10 + 2}, $${i * 10 + 3}, $${i * 10 + 4}, $${
+            i * 10 + 5
+          }, $${i * 10 + 6}, $${i * 10 + 7}, $${i * 10 + 8}, $${i * 10 + 9}, $${
+            i * 10 + 10
+          })`
+      )
+      .join(", ")}
   RETURNING id`;
 
-  const values = recipes.flatMap(recipe => [
+  const values = recipes.flatMap((recipe) => [
     recipe.userid,
     recipe.title,
     recipe.category,
     recipe.info ?? null,
-    recipe.images,
+    recipe.thumbnail,
     recipe.description,
     recipe.ingredients,
     recipe.instructions,
@@ -199,22 +214,24 @@ export async function addRecipe(
     ? await client.query(query, values)
     : await db.query(query, values);
 
-  const ids = results.rows.map(row => row.id);
+  const ids = results.rows.map((row) => row.id);
 
   return Array.isArray(recipe) ? ids : ids[0];
 }
 
 export async function updateRecipe(recipeId: number, recipe: Recipe) {
   const stmt = `UPDATE recipes 
-     SET title=$1, images=$2, description=$3, ingredients=$4, instructions=$5, date_updated=NOW(), public=$6 
-     WHERE id = $7;`;
+     SET title=$1, thumbnail=$2, description=$3, ingredients=$4, instructions=$5, date_updated=NOW(), public=$6, category=$7, info=$8
+     WHERE id = $9;`;
   const values = [
     recipe.title,
-    recipe.images,
+    recipe.thumbnail,
     recipe.description,
     recipe.ingredients,
     recipe.instructions,
     recipe.public,
+    recipe.category,
+    recipe.info ?? null,
     recipeId,
   ];
 
