@@ -8,7 +8,7 @@ export default function SavedGallery({
   recipes,
 }: {
   recipes: (Recipe & { id: string } & {
-    user: {
+    user?: {
       id: number;
       name: string;
       email: string;
@@ -18,7 +18,7 @@ export default function SavedGallery({
 } & React.HTMLAttributes<HTMLDivElement>) {
   const { active } = useNavbarStore((state) => state);
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className={`flex flex-wrap gap-4`}>
       {recipes?.map((recipe, index: number) => (
         <RecipeCard
           variant={active ? "list" : "portrait"}
