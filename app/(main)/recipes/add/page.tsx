@@ -1,14 +1,17 @@
 "use client";
 import RecipeImageHandler from "@/components/recipes/imageHandler";
 import TextareaWithCounter from "@/components/textareaCounter";
-import IngredientsHandler from "@/components/recipes/ingredientsHandler"
+import IngredientsHandler from "@/components/recipes/add/ingredientsHandler"
+import InstructionsHandler from "@/components/recipes/add/InstructionsHandler";
 
 export default function Page() {
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
-    const files = formData.getAll("images");
-    console.log(files);
+    // const files = formData.getAll("images");
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
   };
 
   return (
@@ -16,7 +19,7 @@ export default function Page() {
       <h1 className="font-bold text-2xl py-2">Add a new recipe</h1>
       <form onSubmit={onSubmit}>
         <p className="text-lg font-semibold">Cover Image</p>
-        <RecipeImageHandler />
+        <RecipeImageHandler name="thumbnail" className="h-[20rem]" />
         <label htmlFor="title" className="text-lg font-semibold">
           Title
         </label>
@@ -38,10 +41,14 @@ export default function Page() {
           maxLength={255}
           placeholder="a short description about your recipe (max. 255)"
         />
+        <label htmlFor="catA" className="text-lg font-semibold">
+          Category
+        </label>
         <span className="text-lg font-semibold">Recipe Information</span>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
           <div className="flex gap-2 items-center">
             <input
+              name="servings"
               type="text"
               maxLength={100}
               className="px-4 py-2 w-16 rounded-md border-2 focus:outline-none focus:ring focus:border-blue-500"
@@ -59,6 +66,8 @@ export default function Page() {
         </div>
         <span className="text-lg font-semibold">Ingredients</span>
         <IngredientsHandler />
+        <span className="text-lg font-semibold">Steps / Instructions</span>
+        <InstructionsHandler />
         <button type="submit" className="block">
           Submit
         </button>
