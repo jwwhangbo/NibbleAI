@@ -1,5 +1,13 @@
 'use server'
 
+/**
+ * Uploads a file to the R2 storage.
+ *
+ * @param {File} resource - The file to be uploaded.
+ * @param {string} key - The key (path) where the file will be stored.
+ * @returns {Promise<string>} - A promise that resolves to the URL of the uploaded file.
+ * @throws {Error} - Throws an error if the R2 worker access point, authentication key, or R2 access point is not set, or if the upload fails.
+ */
 export async function Upload(resource: File, key: string) : Promise<string> {
   if (!process.env.R2_WORKER_AP) {
     throw new Error("R2 worker access point not set");
