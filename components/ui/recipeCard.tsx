@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Placeholder from "@/public/landscape-placeholder.png";
-import LikeButton from "./likeButton";
+import LikeButton from "@/components/ui/likeButton";
 import Link from "next/link";
 
 export default function RecipeCard(props: {
