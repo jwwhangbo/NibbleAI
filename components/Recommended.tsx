@@ -1,5 +1,5 @@
 "use server";
-import RecipeCard from "./ui/recipeCard";
+import RecipeCard from "./ui/generatedRecipecard";
 import { fetchGeneratedRecipes } from "@/src/controllers/RecipeController";
 import RefreshButton from "./ui/RefreshButton";
 import { auth } from "@/auth";
