@@ -167,14 +167,20 @@ export async function removeRecipe(
   recipeId: number,
   client?: PoolClient
 ): Promise<void> {
-  const query = "DELETE FROM recipes WHERE id=$1";
+  const session = await auth();
+  // create new client instance for transaction
+  const localClient = client ?? await db.connect();
+  // Query user data from recipes db and match with session userid
+  let query = "SELECT userid FROM recipes where id=$1"
+  const result = await localClient.query(query, [recipeId])
+  const userid = result.rows[0].userid;
+  if (session?.user.id !== userid) {
+    throw new Error("Permission denied");
+  }
+  query = "DELETE FROM recipes WHERE id=$1";
   const values = [recipeId];
 
-  if (client) {
-    await client.query(query, values);
-  } else {
-    await db.query(query, values);
-  }
+  await localClient.query(query, values);
 }
 
 export async function addRecipe(
@@ -219,16 +225,17 @@ export async function addRecipe(
   return Array.isArray(recipe) ? ids : ids[0];
 }
 
-export async function updateRecipe(recipeId: number, recipe: Recipe) {
+export async function updateRecipe(recipeId: number, recipe: Recipe, date?: Date) {
   const stmt = `UPDATE recipes 
-     SET title=$1, thumbnail=$2, description=$3, ingredients=$4, instructions=$5, date_updated=NOW(), public=$6, category=$7, info=$8
-     WHERE id = $9;`;
+     SET title=$1, thumbnail=$2, description=$3, ingredients=$4, instructions=$5, date_updated=$6, public=$7, category=$8, info=$9
+     WHERE id = $10;`;
   const values = [
     recipe.title,
     recipe.thumbnail,
     recipe.description,
     recipe.ingredients,
     recipe.instructions,
+    date ?? null,
     recipe.public,
     recipe.category,
     recipe.info ?? null,
