@@ -1,30 +1,38 @@
-'use client';
+"use client";
 
 import { useNavbarStore } from "@/src/providers/navbar-store-provider";
+import SearchButton from "../ui/search-button";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function HeaderActions() {
   const { setActive } = useNavbarStore((state) => state);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const handleSearch = (term: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set("query", term);
+    } else {
+      params.delete("query");
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
-    <div className="w-full flex justify-end gap-3">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        />
-      </svg>
+    <div className="w-full flex justify-end gap-3 py-3">
+      <SearchButton onChange={(e) => {
+        e.preventDefault();
+        handleSearch(e.currentTarget.value);
+      }} />
       <button
         onClick={(e) => {
           e.preventDefault();
           setActive(true);
         }}
+        className="hover:bg-gray-200 rounded-md p-1"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,6 +54,7 @@ export default function HeaderActions() {
           e.preventDefault();
           setActive(false);
         }}
+        className="hover:bg-gray-200 rounded-md p-1"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
