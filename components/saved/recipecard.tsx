@@ -52,7 +52,7 @@ export default function RecipeCard({
           />
         </div>
       </Link>
-      <div className={`h-auto gap-1 ${isPortraitMode ? "w-auto": "w-full"}`}>
+      <div className={`h-auto space-y-1 ${isPortraitMode ? "w-auto" : "w-full"}`}>
         <p
           className={
             isPortraitMode ? "line-clamp-2" : "line-clamp-1 overflow-ellipsis"
@@ -67,8 +67,18 @@ export default function RecipeCard({
             logoSize={"sm"}
           />
         )}
-        <p className="text-sm text-ellipsis overflow-hidden line-clamp-2 md:line-clamp-none">
+        <p className="text-sm text-ellipsis overflow-hidden line-clamp-2">
           {recipe.description}
+        </p>
+        <p className="text-xs">
+            <strong>Uploaded</strong> {new Date(recipe.date_created).toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+            })}
         </p>
       </div>
     </div>
