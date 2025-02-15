@@ -13,7 +13,7 @@ export default function Page() {
   const sessionData = useSession().data;
   async function uploadFiles(formData: FormData, recipeId: number) {
     for (const [key, value] of formData.entries()) {
-      if (value instanceof File) {
+      if (value instanceof File && value.size > 0) {
         const url = await Upload(value, `recipe-${recipeId}/${key}` );
         formData.set(key, url);
       }
@@ -80,7 +80,7 @@ export default function Page() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const recipeId = await addRecipe({
-      userid: sessionData?.user.id, // Replace with actual user ID
+      userid: sessionData?.user.id,
       title: "",
       description: "",
       category: {
@@ -88,28 +88,48 @@ export default function Page() {
         categoryB: "",
         dietary: "",
       },
-      ingredients: [{
-        ingredient: "",
-        quantity: 0,
-        unit: ""
-      }],
-      instructions: [{
-        step: "",
-        image: ""
-      }],
-      info: {total_time: "", servings: ""},
+      ingredients: [
+        {
+          ingredient: "",
+          quantity: 0,
+          unit: "",
+        },
+      ],
+      instructions: [
+        {
+          step: "",
+          image: "",
+        },
+      ],
+      info: { total_time: "", servings: "" },
       thumbnail: "",
       date_created: new Date(),
-      public: true // or false, depending on your requirement
+      public: true, 
     });
-    console.log(`[${Date.now()}] created new recipe at ${recipeId}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[${Date.now().toString()}] created new recipe at ${recipeId}`);
+    }
     const id = Array.isArray(recipeId) ? recipeId[0] : recipeId;
-    console.log(`[${Date.now()}] uploading files...`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[${Date.now().toString()}] uploading files...`);
+    }
     await uploadFiles(formData, id);
-    console.log(`[${Date.now()}] completed uploading files`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[${Date.now().toString()}] completed uploading files`);
+    }
     const result = processFormData(formData) as Recipe;
     await updateRecipe(id, result);
-    console.log(`[${Date.now()}] uploaded recipe!`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[${Date.now().toString()}] uploaded recipe!`);
+    }
+    
+    // *************************************************************
+    // ***************** For debugging purposes ********************
+    // *************************************************************
+
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(key, value)
+    // }
   };
 
   return (

@@ -13,6 +13,7 @@ export default function RecipeImageHandler({ name, image: imageProp, setImage: s
   const [localImage, localSetImage] = useState<string | undefined>();
   const [dragover, setDragover] = useState<boolean>(false);
 
+  // Sets whether image, setImage is handled internally or externally
   const image = imageProp ?? localImage;
   const setImage = setImageProp ?? localSetImage;
 
@@ -82,7 +83,7 @@ export default function RecipeImageHandler({ name, image: imageProp, setImage: s
     <div
       className={clsx([
         "relative flex flex-col justify-center w-full m-auto h-10",
-        className
+        className,
       ])}
       onDragOver={handleDragOver}
       onDropCapture={handleDropCapture}
@@ -94,19 +95,44 @@ export default function RecipeImageHandler({ name, image: imageProp, setImage: s
         className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
       >
         {imageProp ?? localImage ? (
-          <Image
-            src={image ?? ""}
-            height="150"
-            width="150"
-            alt="user uploaded image"
-            style={{
-              objectFit: "contain",
-              borderRadius: "0.375rem",
-              width: "auto",
-              height: "100%",
-              backgroundColor: "white",
-            }}
-          />
+          <div className="relative m-auto h-full w-fit py-2">
+            <Image
+              src={image ?? ""}
+              height="150"
+              width="150"
+              alt="user uploaded image"
+              style={{
+                objectFit: "contain",
+                borderRadius: "0.375rem",
+                width: "auto",
+                height: "100%",
+                backgroundColor: "white",
+              }}
+            />
+            <button className="absolute -top-1 -left-3 rounded-full bg-red-500 border-2 text-white" onClick={(e) => {
+              e.preventDefault();
+              const input = document.getElementById(name) as HTMLInputElement;
+              if (input.files) {
+                input.value = "";
+                setImage("");
+              }
+            }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 12h14"
+                />
+              </svg>
+            </button>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
             <svg
