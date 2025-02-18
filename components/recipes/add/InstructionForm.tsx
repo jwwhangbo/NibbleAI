@@ -57,7 +57,7 @@ export default function InstructionForm({
           name={`image-${index}`}
           image={image}
           setImage={setImage}
-          className="w-full grow h-[7rem] basis-1/3"
+          className="w-full grow h-[11rem] sm:h-[9rem] basis-1/3"
         />
       </div>
       <button
