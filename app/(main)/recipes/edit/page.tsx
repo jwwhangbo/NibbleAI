@@ -1,7 +1,7 @@
 "use client";
 import RecipeImageHandler from "@/components/recipes/imageHandler";
 import TextareaWithCounter from "@/components/textareaCounter";
-import IngredientsHandler from "@/components/recipes/add/ingredientsHandler"
+import IngredientsHandler from "@/components/recipes/add/ingredientsHandler";
 import InstructionsHandler from "@/components/recipes/add/InstructionsHandler";
 import { CategorySelect } from "@/components/recipes/add/categorySelect";
 import { Upload } from "@/lib/R2Handler";
@@ -14,30 +14,33 @@ export default function Page() {
   async function uploadFiles(formData: FormData, recipeId: number) {
     for (const [key, value] of formData.entries()) {
       if (value instanceof File && value.size > 0) {
-        const url = await Upload(value, `recipe-${recipeId}/${key}` );
+        const url = await Upload(value, `recipe-${recipeId}/${key}`);
         formData.set(key, url);
       }
     }
   }
 
-  function processFormData(formData: FormData) : Record<string, unknown> {
+  function processFormData(formData: FormData): Record<string, unknown> {
     const result: {
-      category: { [key: string]: FormDataEntryValue },
-      ingredients: { ingredient?: FormDataEntryValue, quantity?: FormDataEntryValue, unit?: FormDataEntryValue }[],
-      instructions: { step?: FormDataEntryValue, image?: FormDataEntryValue }[],
-      info: { [key: string]: FormDataEntryValue },
-      public: boolean,
-      [key: string]: unknown,
+      category: { [key: string]: FormDataEntryValue };
+      ingredients: {
+        ingredient?: FormDataEntryValue;
+        quantity?: FormDataEntryValue;
+        unit?: FormDataEntryValue;
+      }[];
+      instructions: { step?: FormDataEntryValue; image?: FormDataEntryValue }[];
+      info: { [key: string]: FormDataEntryValue };
+      public: boolean;
+      [key: string]: unknown;
     } = {
       category: {},
       ingredients: [],
       instructions: [],
       info: {},
-      public: true
+      public: true,
     };
 
     formData.forEach((value, key) => {
-
       if (key.startsWith("ingredient-")) {
         const index = parseInt(key.split("-")[1]);
         result.ingredients[index] = result.ingredients[index] || {};
@@ -62,7 +65,7 @@ export default function Page() {
         result.category[key] = value;
       } else if (key === "total_time" || key === "servings") {
         result.info[key] = value;
-      }else {
+      } else {
         result[key] = value;
       }
     });
@@ -71,10 +74,12 @@ export default function Page() {
     result.ingredients = result.ingredients.filter(
       (item) => item && item.ingredient
     );
-    result.instructions = result.instructions.filter((item) => item && item.step);
+    result.instructions = result.instructions.filter(
+      (item) => item && item.step
+    );
 
     return result;
-  };
+  }
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -104,25 +109,27 @@ export default function Page() {
       info: { total_time: "", servings: "" },
       thumbnail: "",
       date_created: new Date(),
-      public: true, 
+      public: true,
     });
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[${Date.now().toString()}] created new recipe at ${recipeId}`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        `[${Date.now().toString()}] created new recipe at ${recipeId}`
+      );
     }
     const id = Array.isArray(recipeId) ? recipeId[0] : recipeId;
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       console.log(`[${Date.now().toString()}] uploading files...`);
     }
     await uploadFiles(formData, id);
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       console.log(`[${Date.now().toString()}] completed uploading files`);
     }
     const result = processFormData(formData) as Recipe;
     await updateRecipe(id, result);
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       console.log(`[${Date.now().toString()}] uploaded recipe!`);
     }
-    
+
     // *************************************************************
     // ***************** For debugging purposes ********************
     // *************************************************************
@@ -133,9 +140,9 @@ export default function Page() {
   };
 
   return (
-    <div className="px-4 sm:px-[30px]">
-      <h1 className="font-bold text-2xl py-2">Add a new recipe</h1>
-      <form onSubmit={onSubmit}>
+    <div className="px-4 sm:px-[30px] space-y-4">
+      <h1 className="font-bold text-2xl py-2">Edit Recipe</h1>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <p className="text-lg font-semibold">Cover Image</p>
         <RecipeImageHandler name="thumbnail" className="h-[20rem]" />
         <label htmlFor="title" className="text-lg font-semibold">
@@ -159,24 +166,24 @@ export default function Page() {
           maxLength={255}
           placeholder="a short description about your recipe (max. 255)"
         />
-        <label htmlFor="catA" className="text-lg font-semibold">
-          Category
-        </label>
+        <p className="text-lg font-semibold">Category</p>
         <CategorySelect />
         <span className="text-lg font-semibold">Recipe Information</span>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
           <div className="flex gap-2 items-center">
             <input
+              id="servings"
               name="servings"
               type="text"
               maxLength={100}
               className="px-4 py-2 w-16 rounded-md border-2 focus:outline-none focus:ring focus:border-blue-500"
             />
-            <label>Servings</label>
+            <label htmlFor="servings">Servings</label>
           </div>
           <div className="flex gap-2 items-center">
-            <label>Cook time</label>
+            <label htmlFor="total_time">Cook time</label>
             <input
+              id="total_time"
               name="total_time"
               type="text"
               maxLength={100}
@@ -188,9 +195,32 @@ export default function Page() {
         <IngredientsHandler />
         <span className="text-lg font-semibold">Steps / Instructions</span>
         <InstructionsHandler />
-        <button type="submit" className="block">
-          Submit
-        </button>
+        <div className="flex gap-4 justify-end items-center sticky bottom-0 bg-white py-4 *:px-4 *:py-2 *:rounded-md">
+          <button
+            type="submit"
+            className="block text-red-500 border-2 border-red-500 font-semibold hover:bg-red-500 hover:text-white"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            Delete
+          </button>
+          <button
+            type="submit"
+            className="block text-orange-500 font-semibold hover:underline underline-offset-2"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            Save
+          </button>
+          <button
+            type="submit"
+            className="block bg-orange-500 text-white font-semibold hover:bg-orange-600"
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );
