@@ -8,6 +8,7 @@ import { getUserInfo } from "@/src/controllers/UserController";
 import Image from "next/image";
 import { Suspense } from "react";
 import DeleteButtonWithDialog from "@/components/recipes/DeleteButtonWithDialog";
+import Link from "next/link";
 
 const NavbarUserProfileWrapper = async ({
   userid,
@@ -55,7 +56,12 @@ export default async function Page(props: {
           </Suspense>
           {session && session.user.id === recipe.userid && (
             <div className="rounded-md flex *:px-4 *:py-2 border-2 border-gray-300 w-fit overflow-hidden">
-              <button className="hover:bg-orange-100">Edit</button>
+              <Link
+                className="hover:bg-orange-100"
+                href={`recipes/edit?id=${recipe.id}`}
+              >
+                Edit
+              </Link>
               <DeleteButtonWithDialog recipeId={recipe.id} />
             </div>
           )}
@@ -73,7 +79,7 @@ export default async function Page(props: {
         <h2 className="text-2xl font-bold">Ingredients</h2>
         <ul className="list-disc list-inside indent-4">
           {recipe.ingredients.map(
-            (entry: { ingredient: string; quantity: number; unit: string }) => (
+            (entry: { ingredient: string; quantity: string; unit: string }) => (
               <li key={entry.ingredient}>
                 {entry.ingredient} {entry.quantity} {entry.unit}
               </li>
