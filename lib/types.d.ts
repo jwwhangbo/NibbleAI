@@ -45,7 +45,7 @@ export type Recipe = {
   description: string;
   ingredients: {
     ingredient: string;
-    quantity: number;
+    quantity: string;
     unit: string;
   }[];
   instructions: {step:string, image:string}[];
