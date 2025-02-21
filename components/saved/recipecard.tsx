@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import UserProfile from "../ui/userProfile";
 import clsx from "clsx";
+import placeholderImage from "@/public/landscape-placeholder.png"
 
 type Variant = "list" | "portrait";
 
@@ -42,8 +43,9 @@ export default function RecipeCard({
         >
           <Image
             src={
-              recipe.thumbnail ??
-              `${r2ap}/category_default/${recipe.category.categoryA}.jpg`
+              recipe.thumbnail ||
+              (recipe.category.categoryA ? `${r2ap}/category_default/${recipe.category.categoryA}.jpg` :
+              placeholderImage)
             }
             fill
             alt="recipe thumbnail"
