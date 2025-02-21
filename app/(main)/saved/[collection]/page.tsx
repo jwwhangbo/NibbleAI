@@ -1,8 +1,10 @@
 import { auth } from "@/auth";
+import GalleryActionBar from "@/components/saved/Actionbar";
 import SavedGallery from "@/components/saved/gallery";
 import { Recipe } from "@/lib/types";
 import { getFilteredUserSavedRecipes } from "@/src/controllers/CollectionController";
 import { getAllUserRecipes } from "@/src/controllers/RecipeController";
+import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 
 export default async function Page({
@@ -24,7 +26,10 @@ export default async function Page({
         {userRecipes.length < 1 ? (
           <div className="w-full h-full flex flex-col justify-center items-center gap-3">
             <p>No recipes found.</p>
-            <Link href="/recipes/add" className="uppercase flex items-center justify-between leading-none text-[16px] gap-0.5 select-none border border-black rounded-md px-3 py-2 font-semibold tracking-tight text-gray-500 border-gray-500">
+            <Link
+              href="/recipes/add"
+              className="uppercase flex items-center justify-between leading-none text-[16px] gap-0.5 select-none border border-black rounded-md px-3 py-2 font-semibold tracking-tight text-gray-500 border-gray-500"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -32,18 +37,23 @@ export default async function Page({
                 strokeWidth={2.5}
                 stroke="currentColor"
                 className="size-4 relative"
-                >
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   d="M12 4.5v15m7.5-7.5h-15"
-                  />
+                />
               </svg>
               new recipe{" "}
             </Link>
           </div>
         ) : (
-          <SavedGallery recipes={userRecipes} />
+          <div>
+            <SavedGallery recipes={userRecipes} />
+            <SessionProvider session={session}>
+              <GalleryActionBar />
+            </SessionProvider>
+          </div>
         )}
       </div>
     );
