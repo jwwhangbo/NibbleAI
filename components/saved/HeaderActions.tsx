@@ -22,7 +22,7 @@ export default function HeaderActions() {
   };
 
   return (
-    <div className="w-full flex justify-end gap-3 py-3">
+    <div className="w-full flex justify-end gap-3 py-2">
       <SearchButton onChange={(e) => {
         e.preventDefault();
         handleSearch(e.currentTarget.value);
