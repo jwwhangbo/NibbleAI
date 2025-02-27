@@ -1,4 +1,4 @@
-import { Pool, QueryResult } from '@neondatabase/serverless'
+import { Pool } from '@neondatabase/serverless'
 // import { after } from 'next/server'
 
 function createPool() : Pool {
