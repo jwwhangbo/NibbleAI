@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import map from "@/public/providerLogoMap.json" assert { type: "json" };
 import { LogoMap } from "./types";
+import { v4 as uuidv4 } from "uuid";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -39,3 +40,15 @@ export function validateCssUnitValue(value: string) {
 }
 
 export const logoMap: LogoMap = map;
+
+/**
+ * Generates a unique image name using a timestamp and a random UUID.
+ * @param file - The file object.
+ * @returns {string} The unique image name.
+ */
+export const generateUniqueTag = (file: File): string => {
+  const timestamp = Date.now();
+  const randomString = uuidv4();
+  const extension = file.name.split('.').pop();
+  return `${timestamp}-${randomString}.${extension}`;
+};
