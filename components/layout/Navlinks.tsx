@@ -39,7 +39,7 @@ export default function Navlinks() {
                         <td>
                           {idx < 5 && (
                             <Link
-                              href={`/category?cat=${cat}`}
+                              href={`/category/${cat}`}
                               className="hover:font-bold hover:text-[#ff8a00]"
                             >
                               {cat.replace("_", " ")}
@@ -49,7 +49,7 @@ export default function Navlinks() {
                         <td>
                           {idx + 5 < catA.length && (
                             <Link
-                              href={`/category?cat=${catA[idx + 5]}`}
+                              href={`/category/${catA[idx + 5]}`}
                               className="hover:font-bold hover:text-[#ff8a00]"
                             >
                               {catA[idx + 5].replace("_", " ")}
@@ -59,7 +59,7 @@ export default function Navlinks() {
                         <td>
                           {catB[idx] && (
                             <Link
-                              href={`/category?cat=${catB[idx]}`}
+                              href={`/category/${catB[idx]}`}
                               className="hover:font-bold hover:text-[#ff8a00]"
                             >
                               {catB[idx].replace("_", " ")}
@@ -69,7 +69,7 @@ export default function Navlinks() {
                         <td>
                           {dietary[idx] && (
                             <Link
-                              href={`/category?cat={dietary[idx]}`}
+                              href={`/category/${dietary[idx]}`}
                               className="hover:font-bold hover:text-[#ff8a00]"
                             >
                               {dietary[idx]}
