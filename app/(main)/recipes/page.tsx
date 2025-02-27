@@ -79,8 +79,8 @@ export default async function Page(props: {
         <h2 className="text-2xl font-bold">Ingredients</h2>
         <ul className="list-disc list-inside indent-4">
           {recipe.ingredients.map(
-            (entry: { ingredient: string; quantity: string; unit: string }) => (
-              <li key={entry.ingredient}>
+            (entry: { ingredient: string; quantity: string; unit: string }, index) => (
+              <li key={`${entry.ingredient}-${index}`}>
                 {entry.ingredient} {entry.quantity} {entry.unit}
               </li>
             )
