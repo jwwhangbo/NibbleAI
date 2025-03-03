@@ -36,11 +36,15 @@ export type ResponseBody = {
   [key: string]: string | string[];
 };
 
-export type Recipe = {
+interface RecipeData {
   userid: number;
   title: string;
-  category: {categoryA: string, categoryB: string, dietary?: string | undefined};
-  info?: {total_time: string, servings: string};
+  category: {
+    categoryA: string;
+    categoryB: string;
+    dietary?: string | undefined;
+  };
+  info: { total_time: string; servings: string };
   thumbnail: string;
   description: string;
   ingredients: {
@@ -48,7 +52,16 @@ export type Recipe = {
     quantity: string;
     unit: string;
   }[];
-  instructions: {step:string, image:string}[];
+  instructions: { step: string; image: string }[];
+}
+
+export type RecipeDraft = {
+  recipe_id:string;
+  last_saved?: Date;
+} & RecipeData
+
+export type Recipe = {
   date_created: Date;
+  date_updated?: Date;
   public: boolean;
-};
+} & RecipeData;
