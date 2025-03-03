@@ -75,6 +75,19 @@ export default function IngredientsHandler({
         }))
   );
 
+  useEffect(() => {
+      setIngredients(
+        ingredientProps
+          ? ingredientProps.map((prop, index) => ({ ...prop, id: index }))
+          : Array.from({ length: 3 }, (_, i) => ({
+              id: i,
+              ingredient: "",
+              quantity: "",
+              unit: "",
+            }))
+      );
+    }, [ingredientProps]);
+
   /**
    * Creates a new ingredient entry.
    * @returns The new ingredient entry.

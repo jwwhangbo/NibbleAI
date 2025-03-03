@@ -3,12 +3,14 @@ import RecipeImageHandler from "@/components/recipes/imageHandler";
 import TextareaWithCounter from "@/components/textareaCounter";
 import IngredientsHandler from "@/components/recipes/edit/ingredientsHandler";
 import InstructionsHandler from "@/components/recipes/edit/InstructionsHandler";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { CategorySelect } from "@/components/recipes/edit/categorySelect";
 import { RecipeData, RecipeDraft } from "@/lib/types";
 import { useSession } from "next-auth/react";
-import { use, useEffect, useRef, useState, useTransition } from "react";
+import { use, useEffect, useState, useTransition } from "react";
 import {
   addEmptyDraftFromUserId,
+  deleteDraft,
   saveDraft,
   uploadDraftToRecipes,
 } from "@/src/controllers/DraftController";
@@ -30,27 +32,16 @@ export default function NewRecipeForm({
   );
   const [isPending, startTransition] = useTransition();
   const params = useSearchParams();
-  const { replace, push } = useRouter();
+  const { replace, push, refresh } = useRouter();
   const pathname = usePathname();
-  const initialFormValuesRef = useRef<FormData | null>(null);
 
   useEffect(() => {
-    const formElement = document.querySelector("form") as HTMLFormElement;
-    if (formElement) {
-      initialFormValuesRef.current = new FormData(formElement);
+    const draftId = params.get("draftid");
+    if (draftId) {
+      setDraftIdState(parseInt(draftId));
     }
-  }, []);
-
-  const hasFormChanged = (currentFormData: FormData) => {
-    if (!initialFormValuesRef.current) return false;
-
-    for (const [key, value] of currentFormData.entries()) {
-      if (initialFormValuesRef.current.get(key) !== value) {
-        return true;
-      }
-    }
-    return false;
-  };
+    refresh();
+  }, [params, refresh, setDraftIdState]);
   /**
    * Handles the save action for the new recipe form.
    *
@@ -81,6 +72,7 @@ export default function NewRecipeForm({
         replace(`${pathname}?${newParams.toString()}`);
       }
       setDraftIdState(draftId.id);
+      refresh();
     }
     if (draftIdState) {
       const formData = new FormData(
@@ -203,16 +195,19 @@ export default function NewRecipeForm({
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const formValues = processFormData(formData);
-    
+
     if (draftIdState) {
       if (process.env.NODE_ENV === "development") {
         console.log(
           `[${new Date().toISOString()}] uploading draft to recipes...`
         );
       }
-      const recipeId = await uploadDraftToRecipes(formValues as RecipeDraft, draftIdState);
+      const recipeId = await uploadDraftToRecipes(
+        formValues as RecipeDraft,
+        draftIdState
+      );
       const params = new URLSearchParams();
-      params.set('id', recipeId);
+      params.set("id", recipeId);
       push(`/recipes?${params.toString()}`);
     }
     // *************************************************************
@@ -226,9 +221,133 @@ export default function NewRecipeForm({
   };
 
   function RecipeActionBar() {
+    const DiscardDraftButton = () => {
+      const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
+      if (confirmDelete) {
+        return (
+          <div
+            className={`flex gap-3 items-center ${
+              confirmDelete && "animate-fadeIn"
+            }`}
+          >
+            <p className="font-semibold text-red-500 line-clamp-1">
+              Are you sure?
+            </p>
+            <div className="flex gap-2 *:px-2">
+              <button
+                className="hover:underline text-red-500 font-semibold"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  if (draftIdState) {
+                    await deleteDraft(draftIdState);
+                    setDraftIdState(undefined);
+                    push("/recipes/edit");
+                  } else {
+                  }
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="hover:underline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setConfirmDelete(false);
+                }}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        );
+      }
+      return (
+        <button
+          type="submit"
+          className="block text-red-500 font-semibold hover:underline"
+          onClick={(e) => {
+            e.preventDefault();
+            setConfirmDelete(true);
+          }}
+        >
+          Discard Draft
+        </button>
+      );
+    };
+
+    const LoadDraftButton = () => {
+      return (
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <button
+              className="underline line-clamp-1"
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              Load draft ({userDrafts.length})
+            </button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="min-w-[220px] p-5 rounded-md bg-white shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+              sideOffset={5}
+            >
+              <ul className="space-y-1">
+                {userDrafts.map((draft) => (
+                  <li
+                    key={draft.id}
+                    className="hover:bg-gray-100 p-1 rounded-sm"
+                  >
+                    <div className="flex justify-between">
+                      <button
+                        className="max-w-60 text-ellipsis line-clamp-1 text-left"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const searchParams = new URLSearchParams();
+                          searchParams.set('draftid', draft.id.toString());
+                          replace(`${pathname}?${searchParams.toString()}`);
+                        }}
+                      >
+                        {draft.title || "Untitled Recipe"}
+                      </button>
+                      <button
+                        className="text-gray-300 hover:text-gray-400"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          deleteDraft(draft.id);
+                          refresh();
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <DropdownMenu.Arrow className="fill-white" />
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+      );
+    };
+
     return (
       <div className="flex justify-between items-center sticky bottom-0 bg-white py-4">
-        <p>
+        <p className="line-clamp-1">
           {isPending
             ? "Saving..."
             : `Last Saved: ${
@@ -240,16 +359,9 @@ export default function NewRecipeForm({
                   : ""
               }`}
         </p>
-        <div className="flex gap-4 *:px-4 *:py-2 *:rounded-md">
-          <button className="underline">
-            Load draft ({userDrafts.length})
-          </button>
-          <button
-            type="submit"
-            className="block text-red-500 border-2 border-red-500 font-semibold hover:bg-red-500 hover:text-white"
-          >
-            Delete
-          </button>
+        <div className="flex gap-4 *:rounded-md">
+          <LoadDraftButton />
+          <DiscardDraftButton />
           <button
             type="submit"
             className="block text-orange-500 font-semibold hover:underline underline-offset-2"
@@ -263,7 +375,7 @@ export default function NewRecipeForm({
           </button>
           <button
             type="submit"
-            className="block bg-orange-500 text-white font-semibold hover:bg-orange-600"
+            className="block bg-orange-500 text-white font-semibold hover:bg-orange-600 sm:px-2 sm:py-2"
           >
             Submit
           </button>
@@ -277,12 +389,8 @@ export default function NewRecipeForm({
       className="flex flex-col gap-4"
       onSubmit={onSubmit}
       onChange={(e) => {
-        console.log(e);
-        const formElement = e.currentTarget as HTMLFormElement;
-        const currentFormData = new FormData(formElement);
-        if (hasFormChanged(currentFormData)) {
-          debouncedSaveDraft();
-        }
+        e.preventDefault();
+        debouncedSaveDraft();
       }}
     >
       <p className="text-lg font-semibold">Cover Image</p>

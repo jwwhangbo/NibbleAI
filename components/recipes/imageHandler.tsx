@@ -48,7 +48,6 @@ export default function RecipeImageHandler({
   const sessionData = useSession().data;
   const hasMounted = useRef(false);
 
-
   const { draftIdState, setDraftIdState } = useDraft();
   const params = useSearchParams();
   const recipeId = params.get("recipeId");
@@ -66,7 +65,7 @@ export default function RecipeImageHandler({
       hasMounted.current = true;
       return;
     }
-    
+
     const input = document.getElementById(`${name}-text`) as HTMLInputElement;
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
       window.HTMLInputElement.prototype,
@@ -79,6 +78,10 @@ export default function RecipeImageHandler({
     const inputEvent = new Event("input", { bubbles: true });
     input.dispatchEvent(inputEvent);
   }, [image, name]);
+
+  useEffect(() => {
+    setImage(imageProp ?? "");
+  }, [imageProp]);
 
   /**
    * Handles the drag over event to prevent default behavior.
@@ -149,7 +152,8 @@ export default function RecipeImageHandler({
       const reader = new FileReader();
       reader.onloadend = async () => {
         startTransition(async () => {
-          if (!draftIdState) { // Draft id not set, so create a new draft
+          if (!draftIdState) {
+            // Draft id not set, so create a new draft
             if (process.env.NODE_ENV === "development") {
               console.log(
                 `[${new Date().toISOString()}] creating new recipe draft with userid ${
@@ -295,7 +299,9 @@ export default function RecipeImageHandler({
           type="text"
           className="hidden"
           value={image ?? ""}
-          onChange={(e) => {e.preventDefault();}}
+          onChange={(e) => {
+            e.preventDefault();
+          }}
         />
       </label>
       {dragover && <DragOverlay />}

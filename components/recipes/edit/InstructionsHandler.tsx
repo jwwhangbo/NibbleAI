@@ -1,6 +1,6 @@
 "use client";
 import InstructionForm, { type TInstruction } from "./InstructionForm";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function InstructionsHandler({ instructionProps }: { instructionProps?: {step:string, image:string}[] }) {
   const [maxId, setMaxId] = useState(
@@ -15,6 +15,18 @@ export default function InstructionsHandler({ instructionProps }: { instructionP
           image: "",
         }))
   );
+
+  useEffect(() => {
+    setInstructions(
+      instructionProps
+        ? instructionProps.map((prop, index) => ({ ...prop, id: index }))
+        : Array.from({ length: 3 }, (_, i) => ({
+            id: i,
+            step: "",
+            image: "",
+          }))
+    );
+  }, [instructionProps]);
 
   const createNewInstructionEntry = (
     e: React.MouseEvent<HTMLButtonElement>
