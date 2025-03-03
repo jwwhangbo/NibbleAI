@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 
-export default function BackArrow() {
+export default function BackArrow(props: React.HTMLAttributes<HTMLButtonElement>) {
   const nextrouter = useRouter();
   return (
-    <button type="button" onClick={() => nextrouter.back()}>
+    <button type="button" onClick={() => nextrouter.back()} {...props}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
