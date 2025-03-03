@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Suspense } from "react";
 import DeleteButtonWithDialog from "@/components/recipes/DeleteButtonWithDialog";
 import Link from "next/link";
+import BackArrow from "@/components/ui/back-arrow";
 
 const NavbarUserProfileWrapper = async ({
   userid,
@@ -35,6 +36,7 @@ export default async function Page(props: {
 
   return (
     <div className="px-[17px] mt-[20px] flex flex-col space-y-3">
+      <BackArrow className="w-fit"/>
       <div className="flex flex-col sm:flex-row gap-4">
         {recipe.thumbnail && (
           <Image
