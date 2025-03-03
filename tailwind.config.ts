@@ -15,20 +15,12 @@ const config: Config = {
       },
       keyframes: {
         fadeIn: {
-          "0%": {
-            opacity: "0",
-          },
-          "100%": {
-            opacity: "1",
-          },
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         fadeOut: {
-          "0%": {
-            opacity: "1",
-          },
-          "100%": {
-            opacity: "0",
-          },
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
         },
         overlayShow: {
           from: { opacity: "0" },
@@ -41,12 +33,35 @@ const config: Config = {
           },
           to: { opacity: "1", transform: "translate(-50%, -50%) scale(1)" },
         },
+        slideUpAndFade: {
+          "0%": { opacity: "0", transform: "translateY(2px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        slideRightAndFade: {
+          "0%": { opacity: "0", transform: "translateX(-2px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        slideDownAndFade: {
+          "0%": { opacity: "0", transform: "translateY(-2px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        slideLeftAndFade: {
+          "0%": { opacity: "0", transform: "translateX(2px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-in-out",
         fadeOut: "fadeOut 0.5s ease-in-out",
         overlayShow: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideUpAndFade: "slideUpAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
+        slideDownAndFade:
+          "slideDownAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
+        slideRightAndFade:
+          "slideRightAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
+        slideLeftAndFade:
+          "slideLeftAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
       },
       borderRadius: {
         lg: "var(--radius)",
