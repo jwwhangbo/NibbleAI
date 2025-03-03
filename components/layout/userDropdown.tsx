@@ -42,7 +42,7 @@ export default function UserDropdownMenu({ user }: { user: Session["user"] }) {
           <DropdownMenu.Item
             className="text-sm group relative flex h-[25px] select-none items-center rounded-[3px] px-[5px] text-[13px] leading-none text-black outline-none data-[highlighted]:bg-[#ffcd80] data-[highlighted]:cursor-pointer data-[disabled]:text-gray-500 data-[highlighted]:text-black"
             >
-              <Link href="/recipes/add">add new recipe</Link>
+              <Link href="/recipes/edit">add new recipe</Link>
           </DropdownMenu.Item>
           <DropdownMenu.Item
             className="text-sm group relative flex h-[25px] select-none items-center rounded-[3px] px-[5px] text-[13px] leading-none text-black outline-none data-[highlighted]:bg-[#ffcd80] data-[highlighted]:cursor-pointer data-[disabled]:text-gray-500 data-[highlighted]:text-black"

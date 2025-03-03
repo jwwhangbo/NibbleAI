@@ -1,37 +1,42 @@
-'use client'
+"use client";
 import { ResetGeneratedRecipeIds } from "@/src/controllers/RecipeController";
-import { useRouter } from "next/navigation";
-import { useActionState } from "react";
+import { useTransition } from "react";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
 export default function RefreshButton() {
-  const [, action, isPending] = useActionState(async() => {
-    await ResetGeneratedRecipeIds();
-    nextrouter.refresh();
-  }, null)
-  const nextrouter = useRouter()
+  const [isPending, startTransition] = useTransition();
+  const { refresh } = useRouter();
+
+  const buttonAction = () => {
+    startTransition(async () => {
+      await ResetGeneratedRecipeIds();
+      refresh();
+    });
+  };
+
   return (
-    <form action={action} title="Regenerate recipes">
-      <button
-        className="flex justify-center items-center p-2"
-        type="submit"
-        disabled={isPending}
+    <button
+      className="flex justify-center items-center p-2"
+      title="refresh"
+      type="submit"
+      disabled={isPending}
+      onClick={buttonAction}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className={clsx(["size-6", { "animate-spin": isPending }])}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className={clsx(["size-6", {"animate-spin" : isPending}])}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-          />
-        </svg>
-      </button>
-    </form>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+        />
+      </svg>
+    </button>
   );
 }

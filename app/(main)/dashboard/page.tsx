@@ -1,14 +1,16 @@
-import Recommended from "@/components/Recommended";
-import DailyRecipeSkeleton from "@/components/skeletons/DailyRecipeSkeleton";
+import { auth } from "@/auth";
+import Recommended from "@/components/dashboard/Recommended";
+import RecommendedSkeleton from "@/components/skeletons/RecommendedSkeleton";
+import { getGeneratedRecipes } from "@/src/controllers/RecipeController";
 import { Suspense } from "react";
 
 export default async function Page() {
+  const session = await auth();
+  const generatedRecipeIds = await getGeneratedRecipes(session?.user.id);
+  const key = generatedRecipeIds ? generatedRecipeIds.join(",") : "";
   return (
     <div className="px-[17px] pt-2">
-      <Suspense key={Math.random()} fallback={<DailyRecipeSkeleton />}>
-        {/* I can't for the love of god figure out a better way to make this happen...
-          * okay.. this needs to be fixed to prevent hydration errors...
-          */}
+      <Suspense key={key} fallback={<RecommendedSkeleton />}>
         <Recommended />
       </Suspense>
     </div>
