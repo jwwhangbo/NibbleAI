@@ -39,12 +39,12 @@ export async function updateUsername(userid: string, name: string) {
   await db.query(query, [name, userid]);
 }
 
-export async function getUserPreference(userid: number) : Promise<Record<string, unknown>> {
+export async function getUserPreference(userid: number, client?: PoolClient) : Promise<Record<string, unknown>> {
   try {
     const stmt = "SELECT preference FROM users WHERE id = $1";
-    const values = [userid];
 
-    const res = await db.query(stmt, values);
+    const queryPromise = client ? client.query(stmt, [userid]) : db.query(stmt, [userid]);
+    const res = await queryPromise
     return res.rows[0]?.preference;
   } catch (err) {
     throw err;
