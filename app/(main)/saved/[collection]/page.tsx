@@ -48,7 +48,7 @@ export default async function Page({
             </Link>
           </div>
         ) : (
-          <div>
+          <div className="relative h-full w-full">
             <SavedGallery recipes={userRecipes} />
             <SessionProvider session={session}>
               <GalleryActionBar />
