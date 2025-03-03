@@ -6,6 +6,8 @@ import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { getUserPreference } from "./UserController";
 import { catA, catB, dietary } from "../categories"; // Import categories
+import { PoolClient } from "@neondatabase/serverless";
+import { deductToken } from "./AITokensController";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -58,7 +60,7 @@ const RecipeSchema = z.object({
       major_ingredients: z.array(
         z.object({
           ingredient: z.string(),
-          quantity: z.number(),
+          quantity: z.string(),
           unit: z.string(),
         })
       ),
@@ -71,7 +73,6 @@ const RecipeSchema = z.object({
     })
   ),
 });
-
 
 export type GeneratedRecipe = z.infer<typeof RecipeSchema>;
 
@@ -92,32 +93,49 @@ export async function GenerateUserPreference(responseBody: ResponseBody) {
   return completion.choices[0].message.content;
 }
 
-export async function GenerateUserRecipes(userid : number) : Promise<string>{
-  const userPreference = await getUserPreference(userid);
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: [
-          "Generate 4 recipes based on the inputted preference object.",
-          "Don't put too much emphasis on preferences, but take into account dislikes or avoids.",
-          "Assume user is capable of buying or acquiring ingredients not in preferences.",
-          "Try not to generate two recipes of the same categoryA",
-          "Don't use Umami in recipe names.",
-          "Provide more country or region specific ingredients.",
-          "If",
-          "cheese",
-          "chili paste",
-          "oil",
-          "is in ingredients, provide specific name.",
-          "Use real, existing recipes instead of making inspired recipes",
-          "Generate between 7 to 11 detailed_instruction."
-        ].join(" "),
-      },
-      { role: "user", content: JSON.stringify(userPreference) },
-    ],
-    model: "gpt-4o-mini",
-    response_format: zodResponseFormat(RecipeSchema, "recipes"),
-  });
-  return completion.choices[0].message.content || "";
+export async function GenerateUserRecipes(
+  userid: number,
+  client?: PoolClient
+): Promise<string | undefined> {
+  try {
+    const userPreference = await getUserPreference(userid, client);
+    const completion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: [
+            "Generate 4 recipes based on the inputted preference object.",
+            "Don't put too much emphasis on preferences, but take into account dislikes or avoids.",
+            "Assume user is capable of buying or acquiring ingredients not in preferences.",
+            "Try not to generate two recipes of the same categoryA",
+            "Don't use Umami in recipe names.",
+            "Provide more country or region specific ingredients.",
+            "If",
+            "cheese",
+            "chili paste",
+            "oil",
+            "is in ingredients, provide specific name.",
+            "Use real, existing recipes instead of making inspired recipes",
+            "Generate between 7 to 11 detailed_instruction.",
+          ].join(" "),
+        },
+        { role: "user", content: JSON.stringify(userPreference) },
+      ],
+      model: "gpt-4o-mini",
+      response_format: zodResponseFormat(RecipeSchema, "recipes"),
+    });
+    if (completion) {
+      await deductToken();
+      return completion.choices[0].message.content || "";
+    }
+  } catch (error) {
+    if (error instanceof OpenAI.APIError) {
+      console.log(error.request_id);
+      console.log(error.status); 
+      console.log(error.name); 
+      console.log(error.headers); 
+    } else {
+      throw error;
+    }
+  }
 }
