@@ -27,11 +27,11 @@ case 1. recipeId is provided as search parameter
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ id: string; draftId: string }>;
+  searchParams: Promise<{ id: string; draftid: string }>;
 }) {
   const params = await searchParams;
   const recipeId = params.id;
-  let draftId = params.draftId ? parseInt(params.draftId) : undefined;
+  let draftId = params.draftid ? parseInt(params.draftid) : undefined;
   const recipeData = recipeId ? await getRecipe(parseInt(recipeId)) : undefined;
   const session = await auth();
 
@@ -42,9 +42,9 @@ export default async function Page({
   // Fetch draft data if exists
   let recipeDraftData = recipeData
     ? await getDraftFromRecipeId(parseInt(recipeId))
-    : draftId
+    : (draftId
     ? await getDraftFromId(draftId)
-    : undefined;
+    : undefined);
 
   if (recipeDraftData && session?.user.id !== recipeDraftData.userid) {
     throw Error("Unauthorized Access");
