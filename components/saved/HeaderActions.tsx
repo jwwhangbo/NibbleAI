@@ -3,7 +3,6 @@
 import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 import SearchButton from "../ui/search-button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useDebouncedCallback } from "use-debounce";
 
 export default function HeaderActions() {
   const { setActive } = useNavbarStore((state) => state);
