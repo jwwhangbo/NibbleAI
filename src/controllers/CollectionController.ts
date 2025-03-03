@@ -69,22 +69,29 @@ export async function addRecipetoNocategory(recipeId: number): Promise<void> {
   const session = await auth();
   const userid = session?.user.id;
   const client = await db.connect();
-  // first check if row 'NC' exists for user
-  const queryResult = await client.query(
-    `SELECT * FROM collections WHERE userid=$1 AND name='No Category'`,
-    [userid]
-  );
-  if ((queryResult.rowCount ?? 0) <= 0) {
-    await client.query(
-      "INSERT INTO collections (userid, name, recipesid) VALUES ($1, $2, $3);",
-      [userid, "No Category", []]
+  try {
+    // first check if row 'NC' exists for user
+    await client.query('BEGIN');
+    const queryResult = await client.query(
+      `SELECT * FROM collections WHERE userid=$1 AND name='No Category'`,
+      [userid]
     );
+    if ((queryResult.rowCount ?? 0) <= 0) {
+      await client.query(
+        "INSERT INTO collections (userid, name, recipesid) VALUES ($1, $2, $3);",
+        [userid, "No Category", []]
+      );
+    }
+    const stmt = `UPDATE collections SET recipesId = array_append(recipesId, $1) WHERE userid = $2 AND name='No Category';`;
+    const values = [recipeId, userid];
+    await client.query(stmt, values);
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    await client.release();
   }
-  const stmt = `UPDATE collections SET recipesId = array_append(recipesId, $1) WHERE userid = $2 AND name='No Category';`;
-  const values = [recipeId, userid];
-  await client.query(stmt, values);
-
-  await client.release();
 }
 
 export async function removeLikedRecipe(recipeId: number) {
