@@ -100,6 +100,51 @@ export async function fetchRecipesPages(query: string): Promise<number> {
   return results.rowCount ? Math.ceil(results.rowCount / 6) : 1;
 }
 
+async function generateAndSaveRecipes(
+  userId: number,
+  client: PoolClient
+): Promise<number[]> {
+  const generatedRecipes = await GenerateUserRecipes(userId, client);
+  if (!generatedRecipes) {
+    throw Error("Something went wrong");
+  }
+  const recipes: GeneratedRecipe["recipes"] =
+    JSON.parse(generatedRecipes).recipes;
+
+  const formattedRecipes: Recipe[] = recipes.map((recipe) => ({
+    userid: 1,
+    info: recipe.recipe_information,
+    category: recipe.recipe_category,
+    title: recipe.recipe_name,
+    thumbnail: "",
+    description: recipe.recipe_description,
+    ingredients: recipe.major_ingredients,
+    instructions: recipe.detailed_instruction,
+    date_created: new Date(),
+    public: true,
+  }));
+
+  const insertIds = await addRecipe(formattedRecipes, client);
+
+  const results = await client.query(
+    "SELECT * FROM recipes_generated WHERE userId = $1 FOR UPDATE",
+    [userId]
+  );
+  if (results.rows.length === 0) {
+    // user recipe_generated row is not found but not critical, so insert new row
+    await client.query(
+      "INSERT INTO recipes_generated (userId, recipesId) VALUES ($1, $2)",
+      [userId, insertIds]
+    );
+  } else {
+    await client.query(
+      "UPDATE recipes_generated SET recipesId=$1 where userId=$2",
+      [insertIds, userId]
+    );
+  }
+  return Array.isArray(insertIds) ? insertIds : [insertIds];
+}
+
 export async function getOrGenerateRecipeIds(
   userId: number
 ): Promise<number[]> {
@@ -112,43 +157,10 @@ export async function getOrGenerateRecipeIds(
           `[${new Date().toISOString()}] generating new recipes for user ${userId}`
         );
       }
-      const generatedRecipes = await GenerateUserRecipes(userId, client)
-      if (!generatedRecipes) {
-        throw Error("Something went wrong");
-      }
-      const recipes: GeneratedRecipe["recipes"] = JSON.parse(generatedRecipes).recipes;
-
-      const formattedRecipes: Recipe[] = recipes.map((recipe) => ({
-        userid: 1,
-        info: recipe.recipe_information,
-        category: recipe.recipe_category,
-        title: recipe.recipe_name,
-        thumbnail: "",
-        description: recipe.recipe_description,
-        ingredients: recipe.major_ingredients,
-        instructions: recipe.detailed_instruction,
-        date_created: new Date(),
-        public: true,
-      }));
-
-      const insertIds = await addRecipe(formattedRecipes, client);
-
-      const results = await client.query(
-        "SELECT recipesid FROM recipes_generated WHERE userId = $1",
-        [userId]
-      );
-      if (results.rows.length === 0) {
-        await client.query(
-          "INSERT INTO recipes_generated (userId, recipesId) VALUES ($1, $2)",
-          [userId, insertIds]
-        );
-      } else {
-        await client.query(
-          "UPDATE recipes_generated SET recipesId=$1 where userId=$2",
-          [insertIds, userId]
-        );
-      }
-      return Array.isArray(insertIds) ? insertIds : [insertIds];
+      client.query("BEGIN");
+      const insertIds = await generateAndSaveRecipes(userId, client);
+      client.query("COMMIT");
+      return insertIds;
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;
@@ -162,28 +174,37 @@ export async function getOrGenerateRecipeIds(
 /**
  * removes deprecated recipes based on ids retrieved from recipes_generated
  */
-export async function ResetGeneratedRecipeIds() {
+export async function RegenerateRecipeIds() {
   const session = await auth();
   const userId = session?.user?.id;
   if (process.env.NODE_ENV === "development") {
-    console.log(`[${new Date().toISOString()}] resetting generated recipe ids`);
+    console.log(`[${new Date().toISOString()}] regenerating recipe ids`);
   }
   const client = await db.connect();
   try {
-    const result = await client.query(
-      "SELECT recipesId FROM recipes_generated WHERE userId=$1",
+    await client.query(
+      "UPDATE recipes_generated SET is_fetching=true where userId=$1",
       [userId]
     );
-    if (result.rows[0].recipesid.length !== 0) {
-      await client.query(
-        "UPDATE recipes_generated SET recipesId=null where userId=$1",
-        [userId]
-      );
+    client.query("BEGIN");
+    // Lock row to prevent concurrent modifications
+    const { rows } = await client.query(
+      "SELECT * FROM recipes_generated WHERE userId=$1",
+      [userId]
+    );
+    if (rows.length === 0) {
+      throw Error("User not found");
     }
+    await generateAndSaveRecipes(userId, client);
+    client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");
     throw error;
   } finally {
+    await client.query(
+      "UPDATE recipes_generated SET is_fetching=false where userId=$1",
+      [userId]
+    );
     await client.release();
   }
 }
@@ -282,4 +303,12 @@ export async function updateRecipe(
     ? client.query(stmt, values)
     : db.query(stmt, values);
   await queryPromise;
+}
+
+export async function getGeneratingStatus(userid: number) {
+  const { rows } = await db.query(
+    "SELECT is_fetching FROM recipes_generated WHERE userid=$1",
+    [userid]
+  );
+  return rows[0]?.is_fetching;
 }
