@@ -48,13 +48,7 @@ export async function addDraftFromRecipeId(
 ) {
   // Destructure and remove unnecessary properties
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {
-    id,
-    public: isPublic,
-    date_updated,
-    date_created,
-    ...cleanedRecipeData
-  } = recipeData;
+  const {id,public: isPublic,date_updated,date_created,...cleanedRecipeData} = recipeData;
 
   const columns = Object.keys(cleanedRecipeData).join(", ");
   const values = Object.values(cleanedRecipeData);
