@@ -19,7 +19,7 @@ export default function SavedSidebar({
 
   return (
     <div className="shrink-0 sm:w-[150px] my-2 sm:my-4 border-r-2 px-2 sm:px-1 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
-      <ul className="flex flex-row sm:flex-col gap-3 sm:gap-1 *:text-center">
+      <ul className="flex flex-row sm:flex-col gap-3 sm:gap-1 *:text-center *:flex-none">
         <li>
           <Link
             href={"/saved/myrecipe"}

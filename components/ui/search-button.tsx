@@ -10,8 +10,27 @@ export default function SearchButton({ onChange }: { onChange: ChangeEventHandle
 
   return (
     <div className="relative flex items-center justify-end">
+      <AnimatePresence>
+        {isSearchVisible && (
+          <motion.div
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: "200px" }}
+            exit={{ opacity: 0, width: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="absolute right-0"
+          >
+            <input
+              type="search"
+              placeholder="Search..."
+              className="relative w-full pl-4 pr-10 py-2 focus:ring focus:outline-none border-2 border-gray-200 focus:border-blue-500 rounded-lg"
+              aria-label="Search input"
+              onChange={onChange}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <button
-        className="relative z-10 hover:bg-gray-200 rounded-md p-1"
+        className="relative hover:bg-gray-200 rounded-md p-1"
         onClick={toggleSearch}
         aria-label="Toggle search"
       >
@@ -30,25 +49,6 @@ export default function SearchButton({ onChange }: { onChange: ChangeEventHandle
           />
         </svg>
       </button>
-      <AnimatePresence>
-        {isSearchVisible && (
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: "200px" }}
-            exit={{ opacity: 0, width: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="absolute right-0"
-          >
-            <input
-              type="search"
-              placeholder="Search..."
-              className="w-full pl-4 pr-10 py-2 focus:ring focus:outline-none border-2 border-gray-200 focus:border-blue-500 rounded-lg"
-              aria-label="Search input"
-              onChange={onChange}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
