@@ -41,7 +41,9 @@ export async function getUserTokenStatusUpdateOnCall(client?: PoolClient) {
       throw new Error("User not found");
     }
 
-    let { tokens, used: last_updated } = rows[0];
+    const result = rows[0];
+    let tokens = result.tokens;
+    const last_updated = result.used;
     let lastUpdatedTime = new Date(last_updated).getTime();
     const now = new Date().getTime();
 
@@ -110,14 +112,14 @@ export async function deductToken(client?: PoolClient) {
     throw Error("Authorization Error");
   }
   const userId = session.user.id;
-  const localClient = await db.connect();
+  const localClient = client ? client : await db.connect();
   try {
     await localClient.query("BEGIN");
-    const {tokens, secondsUntilNextToken} = await getUserTokenStatusUpdateOnCall();
-    const remainingTokens = Math.max(0, tokens - 1);
-    if (remainingTokens < 1) {
+    const {tokens, } = await getUserTokenStatusUpdateOnCall();
+    if (tokens < 1) {
       throw Error('Insufficient tokens');
     }
+    const remainingTokens = Math.max(0, tokens - 1);
     if (tokens < TOKEN_CAP) { // leaves last used time intact
       const query = `
         UPDATE users_tokens SET tokens=$1 WHERE id=$2
