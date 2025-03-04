@@ -1,8 +1,14 @@
 "use server";
 import { auth } from "@/auth";
 import { pool as db } from "../utils/db";
+import { PoolClient } from "@neondatabase/serverless";
 
 export async function getFilteredUserSavedRecipes(query: string, userid: number) {
+  const { rows } = await db.query('SELECT recipesid FROM collections WHERE userid=$1 AND name=$2', [userid, query]);
+  const recipeids = rows[0].recipesid;
+  if (!recipeids || recipeids.length < 1) {
+    return {recipes: []};
+  }
   const stmt = `
   SELECT json_agg(
     json_build_object(
@@ -39,7 +45,7 @@ export async function getFilteredUserSavedRecipes(query: string, userid: number)
 
 export async function getUserCollections(userid: number) {
   const stmt = `
-    SELECT name
+    SELECT id, name
     FROM collections c
     WHERE c.userid=$1
   `;
@@ -105,4 +111,14 @@ export async function removeLikedRecipe(recipeId: number) {
 `;
   const values = [recipeId, userid];
   await db.query(stmt, values);
+}
+
+export async function addNewCollection(collectionName: string, client?: PoolClient) {
+  const session = await auth();
+  const userid = session?.user.id;
+
+  const query = "INSERT INTO collections (userid, name, recipesid) VALUES ($1, $2, $3)"
+  const values = [userid, collectionName, []]
+  const queryPromise = client ? client.query(query, values) : db.query(query, values);
+  await queryPromise;
 }
