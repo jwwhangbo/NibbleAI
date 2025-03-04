@@ -1,0 +1,96 @@
+[
+  {
+    "id": 1,
+    "question": "How would you rate your cooking skills?",
+    "type": "single_choice",
+    "options": [
+      "Beginner: I have little experience in cooking and I need detailed instructions",
+      "Intermediate: I have some experience and I know my way around a kitchen",
+      "Advanced: I am very experienced and I'm looking for new culinary experiences"
+    ]
+  },
+  {
+    "id": 2,
+    "question": "How often do you cook?",
+    "type": "single_choice",
+    "options": ["Rarely : less than once a week", "Occasionally : once or twice a week", "Often : more than three days a week", "Daily"]
+  },
+  {
+    "id": 3,
+    "question": "Do you have any dietary restrictions? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["None", "Dairy-free", "Vegetarian", "Vegan", "Gluten-free", "Halal", "Other"]
+  },
+  {
+    "id": 4,
+    "question": "How much time do you put in when cooking a meal?",
+    "type": "single_choice",
+    "options": ["<30 minutes", "30–60 minutes", "1–2 hours", "No time limit"]
+  },
+  {
+    "id": 5,
+    "question": "What kitchen equipment do you have access to? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["Stovetop", "Oven", "Microwave", "Air Fryer", "Other"]
+  },
+  {
+    "id": 6,
+    "question": "Where are you located? (You can also provide specific countries in Other)",
+    "type": "single_choice",
+    "options": ["North America", "Europe", "Asia", "South America", "Africa", "Oceania", "Other"]
+  },
+  {
+    "id": 7,
+    "question": "Would you prefer traditional dishes from your region or global cuisines?",
+    "type": "single_choice",
+    "options": ["Traditional dishes", "Global cuisines", "No preference"]
+  },
+  {
+    "id": 8,
+    "question": "Which cuisines do you enjoy? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["No preference", "Italian", "Mexican", "Chinese", "Indian", "French", "Japanese", "Other"]
+  },
+  {
+    "id": 9,
+    "question": "Are there any cuisines or flavors you want to avoid? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["None", "Spicy Food", "Seafood", "High Sodium", "High Fat", "Other"]
+  },
+  {
+    "id": 10,
+    "question": "What flavors do you enjoy most? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["No preference", "Sweet", "Salty", "Spicy", "Bitter", "Sour", "Umami"]
+  },
+  {
+    "id": 11,
+    "question": "Are there any flavors you dislike? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["None", "Sweet", "Salty", "Spicy", "Bitter", "Sour", "Umami"]
+  },
+  {
+    "id": 12,
+    "question": "Do you have a preference for food textures? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["No preference", "Crunchy", "Creamy", "Tender", "Crispy"]
+  },
+  {
+    "id": 13,
+    "question": "What proteins do you like? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["No preference", "Chicken", "Beef", "Pork", "Seafood", "Tofu", "Lentils", "Eggs", "Other"]
+  },
+  {
+    "id": 14,
+    "question": "What vegetables or fruits do you like? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["No preference", "Tomatoes", "Spinach", "Carrots", "Broccoli", "Onions", "Other"]
+  },
+  {
+    "id": 15,
+    "question": "Which pantry staples do you typically use or prefer? (You can select multiple)",
+    "type": "multi_choice",
+    "options": ["No preference", "Rice", "Pasta", "Flour", "Spices", "Olive Oil", "Other"]
+  }
+]

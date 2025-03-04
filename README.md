@@ -1,4 +1,6 @@
-Shield: [![CC BY 4.0][cc-by-shield]][cc-by]
+[![CC BY 4.0][cc-by-shield]][cc-by]
+
+![cookgpt drawio](https://github.com/user-attachments/assets/73f2c618-c13c-4480-9704-96f8f54cbc75)
 
 This work is licensed under a
 [Creative Commons Attribution 4.0 International License][cc-by].
