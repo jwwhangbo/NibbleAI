@@ -1,18 +1,64 @@
 "use client";
-import { ResetGeneratedRecipeIds } from "@/src/controllers/RecipeController";
-import { useTransition } from "react";
+import { RegenerateRecipeIds } from "@/src/controllers/RecipeController";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import { getUserTokenStatusUpdateOnCall } from "@/src/controllers/AITokensController";
 
 export default function RefreshButton() {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | undefined>();
   const { refresh } = useRouter();
 
-  const buttonAction = () => {
-    startTransition(async () => {
-      await ResetGeneratedRecipeIds();
+  useEffect(() => {
+    const fetchPendingStatus = async () => {
+      try {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[${new Date().toISOString()}] Fetching generating status`);
+        }
+        const response = await fetch("/api/fetching");
+        const data = await response.json();
+        if (process.env.NODE_ENV === "development") {
+          console.log(
+            `[${new Date().toISOString()}] generating status: ${data.isFetching}`
+          );
+        }
+        setIsPending(data.isFetching);
+      } catch (error) {
+        console.error("Failed to fetch pending status:", error);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(String(error));
+        }
+      }
+    };
+
+    fetchPendingStatus();
+    const interval = setInterval(fetchPendingStatus, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const buttonAction = async () => {
+    setIsPending(true);
+    try {
+      const {tokens, } = await getUserTokenStatusUpdateOnCall();
+      if (tokens === 0) {
+        throw Error('Not enough tokens');
+      }
+      await RegenerateRecipeIds();
       refresh();
-    });
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+        // console.log(error.message);
+        // console.error(error);
+        alert(error.message);
+      } else {
+        setError(String(error));
+      }
+    }
   };
 
   return (
