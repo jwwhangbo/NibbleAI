@@ -7,6 +7,7 @@ import { getUserTokenStatusUpdateOnCall } from "@/src/controllers/AITokensContro
 
 export default function RefreshButton() {
   const [isPending, setIsPending] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | undefined>();
   const { refresh } = useRouter();
 

@@ -81,6 +81,7 @@ export default function RecipeImageHandler({
 
   useEffect(() => {
     setImage(imageProp ?? "");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageProp]);
 
   /**
