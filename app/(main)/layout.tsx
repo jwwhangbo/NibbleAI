@@ -11,14 +11,16 @@ export default async function Layout({
 }>) {
   const session = await auth();
   return (
-    <SessionProvider session={session}>
-      <NavbarStoreProvider>
-        <TopNavbar />
-        <SideNavbar />
-      </NavbarStoreProvider>
+    <>
+      <SessionProvider session={session}>
+        <NavbarStoreProvider>
+          <TopNavbar />
+          <SideNavbar />
+        </NavbarStoreProvider>
+      </SessionProvider>
       <div className="pt-[56px] sm:pt-[156px] max-w-[1200px] mx-auto">
         {children}
       </div>
-    </SessionProvider>
+    </>
   );
 }
