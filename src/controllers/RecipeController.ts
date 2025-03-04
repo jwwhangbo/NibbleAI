@@ -19,7 +19,9 @@ export async function getGeneratedRecipes(
   WHERE userId = $1;
 `;
   const results = await db.query(query, [userid]);
-  return results.rows[0].recipesid;
+  if (results.rows.length > 0) {
+    return results.rows[0].recipesid;
+  }
 }
 
 export async function getAllUserRecipes() {
