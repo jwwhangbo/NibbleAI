@@ -61,7 +61,7 @@ export default function TokenUI({
           >
             <div>
               <p className="text-sm">
-                Using AI services will deduct "tokens" from your account.
+                Using AI services will deduct &quot;tokens&quot; from your account.
                 You will be unable to use AI services without tokens
                 If you used up your tokens, a new token will be given every hour.
               </p>
