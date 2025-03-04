@@ -153,7 +153,7 @@ export async function uploadDraftToRecipes(
       SELECT recipe_id FROM recipe_drafts WHERE id=$1
     `;
     const result = await client.query(fetchQuery, [draftId]);
-    let recipe_id = result.rows[0].id;
+    let recipe_id = result.rows[0].recipe_id;
     if (recipe_id) {
       updateRecipe(
         recipe_id,
