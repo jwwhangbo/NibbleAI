@@ -223,11 +223,13 @@ export default function NewRecipeForm({
   function RecipeActionBar() {
     const DiscardDraftButton = () => {
       const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
+      const [animationClass, setAnimationClass] =
+        useState<string>("animate-fadeIn");
       if (confirmDelete) {
         return (
           <div
             className={`flex gap-3 items-center ${
-              confirmDelete && "animate-fadeIn"
+              animationClass
             }`}
           >
             <p className="font-semibold text-red-500 line-clamp-1">
@@ -252,7 +254,8 @@ export default function NewRecipeForm({
                 className="hover:underline"
                 onClick={(e) => {
                   e.preventDefault();
-                  setConfirmDelete(false);
+                  setAnimationClass("animate-fadeOut");
+                  setTimeout(() => {setConfirmDelete(false); setAnimationClass("animate-fadeIn")}, 500);
                 }}
               >
                 No
