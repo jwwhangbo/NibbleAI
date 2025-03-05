@@ -2,6 +2,7 @@
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import LoadingIndicator from "./LoadingIndicator";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 export default function PreferenceAlertDialog({
   submitted,
@@ -11,6 +12,7 @@ export default function PreferenceAlertDialog({
   open: boolean;
 }) {
   const nextRouter = useRouter();
+  const [isPending, startTransition] = useTransition();
   return (
     <AlertDialog.Root
       open={open}
@@ -49,12 +51,13 @@ export default function PreferenceAlertDialog({
                     type="button"
                     className="px-4 py-2 border-2 border-black rounded disabled:bg-gray-400"
                     onClick={(e) => {
-                      e.preventDefault();
-                      nextRouter.push("/dashboard");
+                      startTransition(() => 
+                      {e.preventDefault();
                       e.currentTarget.disabled = true;
+                      nextRouter.push("/dashboard");})
                     }}
                   >
-                    Continue
+                    {isPending ? <LoadingIndicator className="w-[24px] h-[24px]"/> :"Continue"} 
                   </button>
                 </AlertDialog.Action>
               </div>
