@@ -1,15 +1,16 @@
 "use client";
 
-import { Session } from "@auth/core/types";
 import ProfilePictureChangeHandler from "@/components/newuser/ProfilePictureChangeHandler";
 import { Upload } from "@/lib/R2Handler";
 import { updateUserImage, updateUsername } from "@/src/controllers/UserController";
 import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useSession } from "next-auth/react";
 
-export default function UserForm({ session }: { session: Session | null }) {
+export default function UserForm() {
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
+  const session = useSession().data;
   const handleSubmit = async (e : React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
@@ -25,8 +26,8 @@ export default function UserForm({ session }: { session: Session | null }) {
         }
         setError(undefined);
         url = await Upload(file, `user${session.user.id}/profile`);
+        await updateUserImage(session.user.id, url);
       }
-      await updateUserImage(session.user.id, url);
       if (username) {
         await updateUsername(session.user.id, username);
       } else {

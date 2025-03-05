@@ -9,7 +9,7 @@ export default function ProfilePictureChangeHandler({
 }: {
   userProfilePicture?: string | null;
 }) {
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(userProfilePicture ?? "");
   return (
     <>
       <div
@@ -17,7 +17,7 @@ export default function ProfilePictureChangeHandler({
         onClick={() => document.getElementById("file")?.click()}
       >
         <Image
-          src={(value || userProfilePicture) ?? defaultProfilePicture}
+          src={value ?? defaultProfilePicture}
           alt="profile-pic"
           width={200}
           height={200}
