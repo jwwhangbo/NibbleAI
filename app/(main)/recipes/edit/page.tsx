@@ -31,20 +31,22 @@ export default async function Page({
 }) {
   const params = await searchParams;
   const recipeId = params.id;
-  let draftId = params.draftid ? parseInt(params.draftid) : undefined;
+  const draftId = params.draftid ? parseInt(params.draftid) : undefined;
   const recipeData = recipeId ? await getRecipe(parseInt(recipeId)) : undefined;
   const session = await auth();
 
   if (recipeData && session?.user.id !== recipeData.userid) {
     throw Error("Unauthorized Access");
   }
-
+  const draftDataFromRecipe = recipeId ? await getDraftFromRecipeId(parseInt(recipeId)) : undefined;
+  
+  if (draftDataFromRecipe) {
+    const params = new URLSearchParams();
+    params.set('draftid', draftDataFromRecipe.id);
+    redirect(`/recipes/edit?${params.toString()}`);
+  }
   // Fetch draft data if exists
-  let recipeDraftData = recipeData
-    ? await getDraftFromRecipeId(parseInt(recipeId))
-    : (draftId
-    ? await getDraftFromId(draftId)
-    : undefined);
+  let recipeDraftData = draftId ? await getDraftFromId(draftId) : undefined;
 
   if (recipeDraftData && session?.user.id !== recipeDraftData.userid) {
     throw Error("Unauthorized Access");
@@ -60,7 +62,10 @@ export default async function Page({
       parseInt(recipeId),
       recipeData
     );
-    draftId = recipeDraftData.id;
+    const params = new URLSearchParams();
+    params.set('draftid', recipeDraftData.id);
+    redirect(`/recipes/edit?${params.toString()}`);
+    // draftId = recipeDraftData.id;
   }
 
   return (
