@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.r2.dev",
+        hostname: "storage.nibble-ai.com",
       },
       {
         protocol: "https",
