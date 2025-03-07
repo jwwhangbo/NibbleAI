@@ -38,8 +38,8 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
-    name: Deploy
+  push:
+    name: Push
     runs-on: ubuntu-latest
     environment: production
 
