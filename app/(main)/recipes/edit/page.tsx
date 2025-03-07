@@ -30,42 +30,51 @@ export default async function Page({
   searchParams: Promise<{ id: string; draftid: string }>;
 }) {
   const params = await searchParams;
-  const recipeId = params.id;
+  const recipeId = params.id ? parseInt(params.id) : undefined;
   const draftId = params.draftid ? parseInt(params.draftid) : undefined;
-  const recipeData = recipeId ? await getRecipe(parseInt(recipeId)) : undefined;
+  const recipeData = recipeId ? await getRecipe(recipeId) : undefined;
   const session = await auth();
 
   if (recipeData && session?.user.id !== recipeData.userid) {
     throw Error("Unauthorized Access");
   }
-  const draftDataFromRecipe = recipeId ? await getDraftFromRecipeId(parseInt(recipeId)) : undefined;
-  
+
+  // lookup draft data from recipe id.
+  const draftDataFromRecipe = recipeId
+    ? await getDraftFromRecipeId(recipeId)
+    : undefined;
+
+  // if draft data is found, redirect to draft page.
   if (draftDataFromRecipe) {
     const params = new URLSearchParams();
-    params.set('draftid', draftDataFromRecipe.id);
+    params.set("draftid", draftDataFromRecipe.id);
     redirect(`/recipes/edit?${params.toString()}`);
   }
-  // Fetch draft data if exists
-  let recipeDraftData = draftId ? await getDraftFromId(draftId) : undefined;
 
+  // If no drafts exist for recipe id, create new one and redirect to draft page.
+  if (recipeId && !draftDataFromRecipe) {
+    const draftData = await addDraftFromRecipeId(
+      recipeId,
+      recipeData
+    );
+    const params = new URLSearchParams();
+    params.set("draftid", draftData.id);
+    redirect(`/recipes/edit?${params.toString()}`);
+    // draftId = recipeDraftData.id;
+  }
+
+  // Fetch draft data from id if it exists
+  const recipeDraftData = draftId ? await getDraftFromId(draftId) : undefined;
+
+
+  // revoke unauthorized access
   if (recipeDraftData && session?.user.id !== recipeDraftData.userid) {
     throw Error("Unauthorized Access");
   }
 
+  // redirect requests to draft data that no longer exists.
   if (draftId && !recipeDraftData) {
-    redirect('/recipes/edit');
-  }
-
-  // If no drafts exist for recipe id, create new one.
-  if (recipeId && !recipeDraftData) {
-    recipeDraftData = await addDraftFromRecipeId(
-      parseInt(recipeId),
-      recipeData
-    );
-    const params = new URLSearchParams();
-    params.set('draftid', recipeDraftData.id);
-    redirect(`/recipes/edit?${params.toString()}`);
-    // draftId = recipeDraftData.id;
+    redirect("/recipes/edit");
   }
 
   return (
