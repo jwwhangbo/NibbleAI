@@ -62,6 +62,7 @@ jobs:
         echo "AUTH_TRUST_HOST=${{ secrets.AUTH_TRUST_HOST }}" >> .env
         echo "AUTH_REDIRECT_PROXY_URL=${{ secrets.AUTH_REDIRECT_PROXY_URL }}" >> .env
         echo "AUTH_URL=${{ secrets.AUTH_URL }}" >> .env
+        echo "AUTH_RESEND_KEY=${{ secrets.AUTH_RESEND_KEY }}" >> .env
         echo "EMAIL_FROM=${{ secrets.EMAIL_FROM }}" >> .env
         echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
         echo "R2_AUTH_HEADER_KEY=${{ secrets.R2_AUTH_HEADER_KEY }}" >> .env
