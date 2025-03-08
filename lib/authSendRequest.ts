@@ -43,7 +43,7 @@ function html(info: {expires: Date, url: string, to:string}) {
                 <td align="center">
                   <a href="https://nibble.ai">
                     <img
-                      src="https://pub-d1a8b5717b5b4146bf4495d7fdd8a0bd.r2.dev/logo_v2.png"
+                      src="https://storage.nibble-ai.com/logo_v2.png"
                       style="width: 250px"
                     />
                   </a>
@@ -151,6 +151,10 @@ function html(info: {expires: Date, url: string, to:string}) {
   `;
 }
 
+export function text({ url, host }: { url: string; host: string }) {
+  return `Sign in to ${host}\n${url}\n\n`;
+}
+
 export async function sendVerificationRequest(params:{
     identifier: string;
     url: string;
@@ -162,19 +166,18 @@ export async function sendVerificationRequest(params:{
 }) {
   const { identifier: to, provider, url, expires } = params;
   const { host } = new URL(url);
-  const res = await fetch("https://send.api.mailtrap.io/api/send", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${provider.apiKey}`,
       "Content-Type": "application/json",
-      Accept: "application/json",
     },
     body: JSON.stringify({
-      from: {"email":provider.from},
-      to: [{"email":to}],
+      from: provider.from,
+      to,
       subject: `Your sign in link to ${host}`,
-      html: html({ expires, url, to }),
-      // text: `Please click here to authenticate - ${url}`,
+      html: html({ expires, to, url }),
+      text: text({ url, host }),
     }),
   });
 
