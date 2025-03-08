@@ -14,9 +14,6 @@ export default function RefreshButton() {
   useEffect(() => {
     const fetchPendingStatus = async () => {
       try {
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`[${new Date().toISOString()}] Fetching generating status`);
-        }
         const response = await fetch("/api/fetching");
         const data = await response.json();
         if (process.env.NODE_ENV === "development") {

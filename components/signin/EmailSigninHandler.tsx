@@ -31,7 +31,7 @@ export default function EmailSigninHandler({
         setSubmissionState(SubmissionState.submitting);
         const formData = new FormData(e.currentTarget);
         const email = formData.get("email") || "";
-        const response = await signIn('http-email', {email: email, redirect:false, redirectTo:callbackUrl})
+        const response = await signIn('resend', {email: email, redirect:false, redirectTo:callbackUrl})
         if (response?.ok) {
           setSubmissionState(SubmissionState.submitted);
           setTimeout(() => {
