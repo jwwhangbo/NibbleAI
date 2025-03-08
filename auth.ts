@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache";
 const providers: Provider[] = [
   Google,
   Resend({
+    apiKey:process.env.AUTH_RESEND_KEY,
     from: process.env.EMAIL_FROM,
     sendVerificationRequest,
   }),
