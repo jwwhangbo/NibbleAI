@@ -1,6 +1,6 @@
-![NibbleAI Logo](https://storage.nibble-ai.com/logo.png)
 
 <div align="center">
+<img src="https://storage.nibble-ai.com/logo.png" width="250px"/>
 
 ![Static Badge](https://img.shields.io/badge/version-prealpha_0.1-red)
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fnibble-ai.com) 
@@ -20,7 +20,7 @@ Get started here [🔗](https://nibble-ai.com)
   - ✏️ Write and upload your own recipes and share it with everyone
 
 ## Cloud service architecture diagram
-upload image here.
+![nibbleai_architecture_v2 (1)](https://github.com/user-attachments/assets/357e0158-7eb3-4580-aad4-5f7784998778)
 
 This work is licensed under a
 [Creative Commons Attribution 4.0 International License][cc-by].
