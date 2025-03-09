@@ -1,6 +1,26 @@
-[![CC BY 4.0][cc-by-shield]][cc-by]
+![NibbleAI Logo](https://storage.nibble-ai.com/logo.png)
 
-![cookgpt drawio](https://github.com/user-attachments/assets/73f2c618-c13c-4480-9704-96f8f54cbc75)
+<div align="center">
+
+![Static Badge](https://img.shields.io/badge/version-prealpha_0.1-red)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fnibble-ai.com) 
+[![CC BY 4.0][cc-by-shield]][cc-by] 
+
+</div>
+
+
+NibbleAI is an AI powered cooking tool that helps you find tailored recipes. 
+
+Get started here [🔗](https://nibble-ai.com)
+
+## Current Features of NibbleAI ⭐
+  - 📊 Analyzes user's preferences using AI
+  - 📝 Generates tailored recipes based on user preference
+  - ❤️ Save Recipes in personal collection
+  - ✏️ Write and upload your own recipes and share it with everyone
+
+## Cloud service architecture diagram
+upload image here.
 
 This work is licensed under a
 [Creative Commons Attribution 4.0 International License][cc-by].
