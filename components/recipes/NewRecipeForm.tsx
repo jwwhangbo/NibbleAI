@@ -40,6 +40,9 @@ export default function NewRecipeForm({
     if (draftId) {
       setDraftIdState(parseInt(draftId));
     }
+    else {
+      setDraftIdState(undefined);
+    }
     refresh();
   }, [params, refresh, setDraftIdState]);
   /**
@@ -393,6 +396,7 @@ export default function NewRecipeForm({
       onSubmit={onSubmit}
       onChange={(e) => {
         e.preventDefault();
+        console.log(e);
         debouncedSaveDraft();
       }}
     >
@@ -400,7 +404,7 @@ export default function NewRecipeForm({
       <RecipeImageHandler
         name="thumbnail"
         className="h-[20rem]"
-        image={recipeDraftData?.thumbnail}
+        image={recipeDraftData?.thumbnail ?? ""}
       />
       <label htmlFor="title" className="text-lg font-semibold">
         Title

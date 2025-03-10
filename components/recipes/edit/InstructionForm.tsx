@@ -55,7 +55,7 @@ export default function InstructionForm({
         />
         <RecipeImageHandler
           name={`image-${index}`}
-          image={image}
+          image={image ?? ""}
           setImage={setImage}
           className="w-full grow h-[11rem] sm:h-[9rem] basis-1/3"
         />
