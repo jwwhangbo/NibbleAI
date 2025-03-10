@@ -27,7 +27,7 @@ export default async function Page({
           <div className="w-full h-full flex flex-col justify-center items-center gap-3">
             <p>No recipes found.</p>
             <Link
-              href="/recipes/add"
+              href="/recipes/edit"
               className="uppercase flex items-center justify-between leading-none text-[16px] gap-0.5 select-none border border-black rounded-md px-3 py-2 font-semibold tracking-tight text-gray-500 border-gray-500"
             >
               <svg
