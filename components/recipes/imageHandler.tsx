@@ -11,7 +11,7 @@ import { generateUniqueTag } from "@/lib/utils";
 
 interface ImageHandlerProps {
   name: string;
-  image?: string;
+  image: string;
   setImage?: (a: string) => void;
 }
 
@@ -80,7 +80,7 @@ export default function RecipeImageHandler({
   }, [image, name]);
 
   useEffect(() => {
-    setImage(imageProp ?? "");
+    setImage(imageProp);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageProp]);
 
@@ -101,23 +101,11 @@ export default function RecipeImageHandler({
     setDragover(false);
     const file = e.dataTransfer.files?.[0];
     if (file) {
-      try {
-        if (file.type !== "image/jpeg" && file.type !== "image/png") {
-          throw Error(
-            `Unsupported file type: ${file.type}. Supported file types: .jpg, .jpeg, .png`
-          );
-        }
-        if (file.size > 5242880) {
-          throw Error("File exceeds file size limit. (MAX. 5MB)");
-        }
         const input = document.getElementById(name) as HTMLInputElement;
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         input.files = dataTransfer.files;
         input.dispatchEvent(new Event("change", { bubbles: true }));
-      } catch (error) {
-        setError((error as Error).message);
-      }
     }
   };
 
@@ -164,24 +152,40 @@ export default function RecipeImageHandler({
             }
             const draftId = await addEmptyDraftFromUserId(sessionData?.user.id);
             setDraftIdState(draftId);
-            if (!params.get("draftId")) {
+            if (!params.get("draftid")) {
               const newParams = new URLSearchParams(params);
-              newParams.set("draftId", draftId.id);
+              newParams.set("draftid", draftId.id);
               replace(`${pathname}?${newParams.toString()}`);
             }
           }
           // generate tag and upload image
           const tag = generateUniqueTag(file);
-          const imageUrl = await Upload(
-            file,
-            `${recipeId ?? ""}${draftIdState}/${tag}`
-          );
-          if (process.env.NODE_ENV === "development") {
-            console.log(
-              `[${new Date().toISOString()}] uploaded image successfully to ${imageUrl}`
+          try {
+            if (file.type !== "image/jpeg" && file.type !== "image/png") {
+              throw Error(
+                `Unsupported file type: ${file.type}. Supported file types: .jpg, .jpeg, .png`
+              );
+            }
+            if (file.size > 5242880) {
+              throw Error("File exceeds file size limit. (MAX. 5MB)");
+            }
+            const imageUrl = await Upload(
+              file,
+              `${recipeId ?? ""}${draftIdState}/${tag}`
             );
+            if (process.env.NODE_ENV === "development") {
+              console.log(
+                `[${new Date().toISOString()}] uploaded image successfully to ${imageUrl}`
+              );
+            }
+            setImage(imageUrl);
+          } catch (error) {
+            if (error instanceof Error) {
+              setError(error.message);
+            }
+            setImage("");
+            e.target.value = ""
           }
-          setImage(imageUrl);
         });
       };
       reader.readAsDataURL(file);
@@ -299,7 +303,7 @@ export default function RecipeImageHandler({
           name={name}
           type="text"
           className="hidden"
-          value={image ?? ""}
+          value={image}
           onChange={(e) => {
             e.preventDefault();
           }}
