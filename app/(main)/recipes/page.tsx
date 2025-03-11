@@ -10,6 +10,32 @@ import { Suspense } from "react";
 import DeleteButtonWithDialog from "@/components/recipes/DeleteButtonWithDialog";
 import Link from "next/link";
 import BackArrow from "@/components/ui/back-arrow";
+import type { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+};
+
+export async function generateMetadata(
+  { searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { id } = await searchParams;
+  const parentMetaData = await parent;
+  if (!id) {
+    return parentMetaData as Metadata;
+  }
+  const recipe: Recipe & { id: string } = await getRecipe(parseInt(id));
+  return {
+    title: `${recipe.title} | NibbleAI`,
+    description: recipe.description,
+    openGraph: {
+      title: `${recipe.title} | NibbleAI`,
+      description: recipe.description,
+      images: [recipe.thumbnail, ...parentMetaData.openGraph?.images || []]
+    },
+  };
+}
 
 const NavbarUserProfileWrapper = async ({
   userid,
@@ -36,7 +62,7 @@ export default async function Page(props: {
 
   return (
     <div className="px-[17px] mt-[20px] flex flex-col space-y-3">
-      <BackArrow className="w-fit"/>
+      <BackArrow className="w-fit" />
       <div className="flex flex-col sm:flex-row gap-4">
         {recipe.thumbnail && (
           <Image
@@ -81,7 +107,10 @@ export default async function Page(props: {
         <h2 className="text-2xl font-bold">Ingredients</h2>
         <ul className="list-disc list-inside indent-4">
           {recipe.ingredients.map(
-            (entry: { ingredient: string; quantity: string; unit: string }, index) => (
+            (
+              entry: { ingredient: string; quantity: string; unit: string },
+              index
+            ) => (
               <li key={`${entry.ingredient}-${index}`}>
                 {entry.ingredient} {entry.quantity} {entry.unit}
               </li>

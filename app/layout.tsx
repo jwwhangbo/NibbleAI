@@ -14,8 +14,19 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "NibbleAI",
+  title: "NibbleAI | AI Generated Recipes",
   description: "AI Generated Recipes",
+  openGraph: {
+    title: "NibbleAI | AI Generated Recipes",
+    description: "AI Generated Recipes",
+    images: [
+      {
+        url:"https://storage.nibble-ai.com/logo.png",
+        width: 800,
+        height: 800
+      }
+    ]
+  },
 };
 
 export default function RootLayout({
