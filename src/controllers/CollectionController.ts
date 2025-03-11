@@ -122,3 +122,22 @@ export async function addNewCollection(collectionName: string, client?: PoolClie
   const queryPromise = client ? client.query(query, values) : db.query(query, values);
   await queryPromise;
 }
+
+export async function removeCollection(collectionId: number, client?: PoolClient) {
+  const session = await auth();
+  // lock row for removal
+  let query = "SELECT * FROM collections WHERE id=$1";
+  let queryPromise = client ? client.query(query, [collectionId]) : db.query(query, [collectionId]);
+  const { rows } = await queryPromise;
+  
+  if (!session || session?.user.id !== rows[0].userid) {
+    throw Error('Unauthroized Access');
+  }
+
+  query = "DELETE FROM collections WHERE id=$1";
+  queryPromise = client ? client.query(query, [collectionId]) : db.query(query, [collectionId]);
+  await queryPromise;
+  if (process.env.NODE_ENV === "development") {
+    console.log(`[${new Date().toISOString()}] collection with id ${collectionId} removed by user with id ${session?.user.id}`);
+  }
+}
