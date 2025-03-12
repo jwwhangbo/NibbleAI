@@ -5,7 +5,7 @@ import { PoolClient } from "@neondatabase/serverless";
 
 export async function getFilteredUserSavedRecipes(query: string, userid: number) {
   const { rows } = await db.query('SELECT recipesid FROM collections WHERE userid=$1 AND name=$2', [userid, query]);
-  const recipeids = rows[0].recipesid;
+  const recipeids = rows[0]?.recipesid;
   if (!recipeids || recipeids.length < 1) {
     return {recipes: []};
   }
