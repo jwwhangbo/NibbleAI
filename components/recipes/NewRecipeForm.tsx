@@ -23,7 +23,7 @@ export default function NewRecipeForm({
   userDraftPromise,
 }: {
   recipeDraftData?: RecipeDraft;
-  userDraftPromise: Promise<{ title: string; id: number, last_saved: Date}[]>;
+  userDraftPromise: Promise<{ title: string; id: number; last_saved: Date }[]>;
 }) {
   const userDrafts = use(userDraftPromise);
   const { draftIdState, setDraftIdState } = useDraft();
@@ -39,8 +39,7 @@ export default function NewRecipeForm({
     const draftId = params.get("draftid");
     if (draftId) {
       setDraftIdState(parseInt(draftId));
-    }
-    else {
+    } else {
       setDraftIdState(undefined);
     }
     refresh();
@@ -69,9 +68,9 @@ export default function NewRecipeForm({
         );
       }
       const draftId = await addEmptyDraftFromUserId(sessionData?.user.id);
-      if (!params.get("draftId")) {
+      if (!params.get("draftid")) {
         const newParams = new URLSearchParams(params);
-        newParams.set("draftId", draftId.id);
+        newParams.set("draftid", draftId.id);
         replace(`${pathname}?${newParams.toString()}`);
       }
       setDraftIdState(draftId.id);
@@ -230,11 +229,7 @@ export default function NewRecipeForm({
         useState<string>("animate-fadeIn");
       if (confirmDelete) {
         return (
-          <div
-            className={`flex gap-3 items-center ${
-              animationClass
-            }`}
-          >
+          <div className={`flex gap-3 items-center ${animationClass}`}>
             <p className="font-semibold text-red-500 line-clamp-1">
               Are you sure?
             </p>
@@ -258,7 +253,10 @@ export default function NewRecipeForm({
                 onClick={(e) => {
                   e.preventDefault();
                   setAnimationClass("animate-fadeOut");
-                  setTimeout(() => {setConfirmDelete(false); setAnimationClass("animate-fadeIn")}, 500);
+                  setTimeout(() => {
+                    setConfirmDelete(false);
+                    setAnimationClass("animate-fadeIn");
+                  }, 500);
                 }}
               >
                 No
@@ -410,6 +408,10 @@ export default function NewRecipeForm({
       onSubmit={onSubmit}
       onChange={(e) => {
         e.preventDefault();
+        if (process.env.NODE_ENV === "development") {
+          console.log("form onChange event is being invoked");
+          console.log(e);
+        }
         debouncedSaveDraft();
       }}
     >
