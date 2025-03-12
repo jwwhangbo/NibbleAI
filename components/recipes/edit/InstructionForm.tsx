@@ -43,6 +43,7 @@ export default function InstructionForm({
 
   return (
     <div className="flex w-full gap-4 items-center">
+        <p className="font-semibold line-clamp-1 shrink-0">Step {index+1}.</p>
       <div className="flex gap-2 grow w-full">
         <TextareaWithCounter
           className="w-full grow basis-2/3"

@@ -130,7 +130,7 @@ export async function getDraftFromId(id: number, client?: PoolClient) {
 
 export async function getUserDrafts(userId: number, client?: PoolClient) {
   const query = `
-    SELECT id, title
+    SELECT id, title, last_saved
     FROM recipe_drafts
     WHERE userid=$1
   `;

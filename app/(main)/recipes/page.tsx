@@ -68,12 +68,13 @@ export default async function Page(props: {
           <Image
             src={recipe.thumbnail}
             alt="recipe thumbnail"
-            width={200}
-            height={200}
-            className="w-full grow basis-1/2"
+            width={800}
+            height={600}
+            quality={100}
+            className="w-full grow basis-3/5"
           />
         )}
-        <div className="grow basis-1/2 flex flex-col justify-center gap-6 pr-4 pb-6 sm:pb-0">
+        <div className="grow basis-2/5 flex flex-col justify-center gap-6 pr-4 pb-6 sm:pb-0">
           <h1 className="text-4xl font-bold">{recipe.title}</h1>
           <h3>{recipe.description}</h3>
           <Suspense fallback={<UserProfileSkeleton className="w-fit" />}>
@@ -105,7 +106,7 @@ export default async function Page(props: {
       </div>
       <div className="py-5 flex flex-col space-y-3">
         <h2 className="text-2xl font-bold">Ingredients</h2>
-        <ul className="list-disc list-inside indent-4">
+        <ul className="list-disc list-inside indent-4 space-y-4">
           {recipe.ingredients.map(
             (
               entry: { ingredient: string; quantity: string; unit: string },
@@ -119,7 +120,7 @@ export default async function Page(props: {
         </ul>
       </div>
       <h2 className="text-2xl font-bold">Instructions</h2>
-      <ol className="list-none list-inside indent-4 space-y-4">
+      <ol className="list-none list-inside indent-4 space-y-20">
         {recipe.instructions.map((entry, index: number) => (
           <li key={index}>
             <div className="flex flex-col w-full justify-between items-center space-y-4 text-justify">
@@ -128,13 +129,17 @@ export default async function Page(props: {
                 <span>{entry.step}</span>
               </div>
               {!!entry.image && (
-                <Image
-                  src={entry.image}
-                  alt={"image"}
-                  height={200}
-                  width={200}
-                  style={{ width: "100%", maxWidth: "800px", flexGrow: 1 }}
-                />
+                <div className="relative w-full max-w-[800px] aspect-[4/3] grow-1">
+                  <Image
+                    src={entry.image}
+                    alt={"image"}
+                    objectFit="contain"
+                    fill
+                    quality={100}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    // style={{ width:"100%", maxWidth:"800px", aspectRatio:"4/3", flexGrow: 1 }}
+                  />
+                </div>
               )}
             </div>
           </li>

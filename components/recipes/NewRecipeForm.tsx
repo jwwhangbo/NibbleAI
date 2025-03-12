@@ -23,7 +23,7 @@ export default function NewRecipeForm({
   userDraftPromise,
 }: {
   recipeDraftData?: RecipeDraft;
-  userDraftPromise: Promise<{ title: string; id: number }[]>;
+  userDraftPromise: Promise<{ title: string; id: number, last_saved: Date}[]>;
 }) {
   const userDrafts = use(userDraftPromise);
   const { draftIdState, setDraftIdState } = useDraft();
@@ -305,18 +305,28 @@ export default function NewRecipeForm({
                     key={draft.id}
                     className="hover:bg-gray-100 p-1 rounded-sm"
                   >
-                    <div className="flex justify-between">
+                    <div className="flex justify-between gap-3 items-end">
                       <button
                         className="max-w-60 text-ellipsis line-clamp-1 text-left"
                         onClick={(e) => {
                           e.preventDefault();
                           const searchParams = new URLSearchParams();
-                          searchParams.set('draftid', draft.id.toString());
+                          searchParams.set("draftid", draft.id.toString());
                           replace(`${pathname}?${searchParams.toString()}`);
                         }}
                       >
                         {draft.title || "Untitled Recipe"}
                       </button>
+                      <p className="text-sm h-fit">
+                        {draft.last_saved.toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        })}
+                      </p>
                       <button
                         className="text-gray-300 hover:text-gray-400"
                         onClick={(e) => {
@@ -358,10 +368,14 @@ export default function NewRecipeForm({
             ? "Saving..."
             : `Last Saved: ${
                 lastSaved
-                  ? new Date(lastSaved)
-                      .toISOString()
-                      .replace("T", " ")
-                      .substring(0, 19)
+                  ? new Date(lastSaved).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })
                   : ""
               }`}
         </p>
@@ -396,7 +410,6 @@ export default function NewRecipeForm({
       onSubmit={onSubmit}
       onChange={(e) => {
         e.preventDefault();
-        console.log(e);
         debouncedSaveDraft();
       }}
     >
