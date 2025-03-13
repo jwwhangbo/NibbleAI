@@ -61,20 +61,21 @@ export default async function Page(props: {
   const session = await auth();
 
   return (
-    <div className="px-[17px] mt-[20px] flex flex-col space-y-3">
+    <div className="px-[17px] flex flex-col space-y-3">
       <BackArrow className="w-fit" />
       <div className="flex flex-col sm:flex-row gap-4">
         {recipe.thumbnail && (
+          <div className="relative sm:max-w-[60%] w-full grow aspect-[5/4] basis-2/3">
           <Image
             src={recipe.thumbnail}
             alt="recipe thumbnail"
-            width={800}
-            height={600}
+              fill
             quality={100}
-            className="w-full grow basis-3/5"
+              style={{ objectFit: "cover" }}
           />
+          </div>
         )}
-        <div className="grow basis-2/5 flex flex-col justify-center gap-6 pr-4 pb-6 sm:pb-0">
+        <div className="w-full flex flex-col justify-center gap-6 pr-4 pb-6 sm:pb-0 basis-1/3">
           <h1 className="text-4xl font-bold">{recipe.title}</h1>
           <h3>{recipe.description}</h3>
           <Suspense fallback={<UserProfileSkeleton className="w-fit" />}>
