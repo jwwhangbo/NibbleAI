@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     images: [
       {
         url:"https://storage.nibble-ai.com/logo.png",
-        width: 800,
-        height: 800
+        width: 400,
+        height: 400
       }
     ]
   },
