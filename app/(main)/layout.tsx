@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { GoogleAdSense } from "@/components/Adsense/Google";
 import SideNavbar from "@/components/layout/SideNav";
 import TopNavbar from "@/components/layout/TopNavbar";
 import { NavbarStoreProvider } from "@/src/providers/navbar-store-provider";
@@ -21,6 +22,7 @@ export default async function Layout({
       <div className="pt-[56px] sm:pt-[156px] max-w-[1200px] mx-auto">
         {children}
       </div>
+      <GoogleAdSense/>
     </>
   );
 }
