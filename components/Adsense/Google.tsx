@@ -2,6 +2,7 @@
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     adsbygoogle: any[];
   }
 }
@@ -33,7 +34,7 @@ export function AdComponent({
       }
     };
 
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       if (window.adsbygoogle) {
         pushAd();
         clearInterval(interval);
