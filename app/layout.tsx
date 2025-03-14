@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { roboto } from "@/components/ui/fonts"
 import "./globals.css";
+import { GoogleAdSense } from "@/components/Adsense/Google";
 // import localFont from "next/font/local";
 
 // const geistSans = localFont({
@@ -37,14 +38,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2511010321424649"
-          crossOrigin="anonymous"
-        ></script>
-      </head>
       <body className={`${roboto.className} antialiased`}>{children}</body>
+      <GoogleAdSense />
     </html>
   );
 }
