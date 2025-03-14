@@ -17,6 +17,7 @@ import {
 import { useDebouncedCallback } from "use-debounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDraft } from "@/src/providers/draft-context-provider";
+import LoadingIndicator from "../ui/LoadingIndicator";
 
 export default function NewRecipeForm({
   recipeDraftData,
@@ -30,7 +31,8 @@ export default function NewRecipeForm({
   const [lastSaved, setLastSaved] = useState<Date | undefined>(
     recipeDraftData?.last_saved
   );
-  const [isPending, startTransition] = useTransition();
+  const [isSavePending, startSaveTransition] = useTransition();
+  const [isSubmitPending, startSubmitTransition] = useTransition();
   const params = useSearchParams();
   const { replace, push, refresh } = useRouter();
   const pathname = usePathname();
@@ -94,7 +96,7 @@ export default function NewRecipeForm({
   };
 
   const debouncedSaveDraft = useDebouncedCallback(
-    () => startTransition(handleSave),
+    () => startSaveTransition(handleSave),
     500
   );
 
@@ -362,7 +364,7 @@ export default function NewRecipeForm({
     return (
       <div className="flex justify-between items-center sticky bottom-0 bg-white py-4">
         <p className="line-clamp-1">
-          {isPending
+          {isSavePending
             ? "Saving..."
             : `Last Saved: ${
                 lastSaved
@@ -383,7 +385,7 @@ export default function NewRecipeForm({
           <button
             type="submit"
             className="block text-orange-500 font-semibold hover:underline underline-offset-2"
-            disabled={isPending}
+            disabled={isSavePending}
             onClick={(e) => {
               e.preventDefault();
               debouncedSaveDraft();
@@ -393,9 +395,10 @@ export default function NewRecipeForm({
           </button>
           <button
             type="submit"
-            className="block bg-orange-500 text-white font-semibold hover:bg-orange-600 sm:px-2 sm:py-2"
+            className="h-10 w-20 block bg-orange-500 text-white font-semibold hover:bg-orange-600 sm:px-2 sm:py-2 disabled:bg-gray-300"
+            disabled={isSubmitPending}
           >
-            Submit
+            {isSubmitPending ? <LoadingIndicator className="w-[24px] h-[24px] mx-auto"/> :"Submit"}
           </button>
         </div>
       </div>
@@ -405,7 +408,7 @@ export default function NewRecipeForm({
   return (
     <form
       className="flex flex-col gap-4"
-      onSubmit={onSubmit}
+      onSubmit={(e) => {startSubmitTransition(() => onSubmit(e))}}
       onChange={(e) => {
         e.preventDefault();
         if (process.env.NODE_ENV === "development") {

@@ -65,3 +65,12 @@ export type Recipe = {
   date_updated?: Date;
   public: boolean;
 } & RecipeData;
+
+export type Comment = {
+  userid: number;
+  recipeid: number;
+  rating_stars: number;
+  rating_description: string;
+  date_created: Date;
+  date_updated: Date;
+};

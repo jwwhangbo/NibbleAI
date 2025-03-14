@@ -49,6 +49,16 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateX(2px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
+        bounceHarder: {
+          "0%, 100%": {
+            transform: "translateY(-250%)",
+            "animation-timing-function": "cubic-bezier(0.8, 0, 1, 1)",
+          },
+          "50%": {
+            transform: "translateY(0)",
+            "animation-timing-function": "cubic-bezier(0, 0, 0.2, 1)",
+          },
+        },
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-in-out",
@@ -62,6 +72,7 @@ const config: Config = {
           "slideRightAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
         slideLeftAndFade:
           "slideLeftAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
+        bounceHarder: "bounceHarder 1000ms infinite",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -11,6 +11,9 @@ import DeleteButtonWithDialog from "@/components/recipes/DeleteButtonWithDialog"
 import Link from "next/link";
 import BackArrow from "@/components/ui/back-arrow";
 import type { Metadata, ResolvingMetadata } from "next";
+import CommentSection from "@/components/recipes/commentSection";
+import { Poppins } from "next/font/google";
+import { Weight } from "lucide-react";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -42,8 +45,10 @@ const NavbarUserProfileWrapper = async ({
   ...props
 }: { userid: number } & React.HTMLAttributes<HTMLDivElement>) => {
   const userInfo = await getUserInfo(userid);
-  return <NavbarUserProfile {...props} user={userInfo} />;
+  return <NavbarUserProfile {...props} user={{id:userid, ...userInfo}} />;
 };
+
+const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
 
 export default async function Page(props: {
   searchParams: Promise<{ id: number | undefined }>;
@@ -61,22 +66,24 @@ export default async function Page(props: {
   const session = await auth();
 
   return (
-    <div className="px-[17px] flex flex-col space-y-3">
+    <div
+      className={`px-[17px] flex flex-col space-y-3 ${poppins.className}`}
+    >
       <BackArrow className="w-fit" />
       <div className="flex flex-col sm:flex-row gap-4">
         {recipe.thumbnail && (
           <div className="relative sm:max-w-[60%] w-full grow aspect-[5/4] basis-2/3">
-          <Image
-            src={recipe.thumbnail}
-            alt="recipe thumbnail"
+            <Image
+              src={recipe.thumbnail}
+              alt="recipe thumbnail"
               fill
-            quality={100}
+              quality={100}
               style={{ objectFit: "cover" }}
-          />
+            />
           </div>
         )}
         <div className="w-full flex flex-col justify-center gap-6 pr-4 pb-6 sm:pb-0 basis-1/3">
-          <h1 className="text-4xl font-bold">{recipe.title}</h1>
+          <h1 className="text-4xl font-bold text-[#dc6b2a]">{recipe.title}</h1>
           <h3>{recipe.description}</h3>
           <Suspense fallback={<UserProfileSkeleton className="w-fit" />}>
             <NavbarUserProfileWrapper
@@ -97,8 +104,8 @@ export default async function Page(props: {
           )}
         </div>
       </div>
-      <div className="space-y-3">
-        <h2 className="text-2xl font-bold">Recipe Information</h2>
+      <div className="pt-8 space-y-3">
+        <h2 className="text-3xl font-bold">Recipe Information</h2>
         <p>
           <strong>Prep Time </strong>
           {recipe.info?.total_time || ""} <strong>Yields</strong>{" "}
@@ -106,7 +113,7 @@ export default async function Page(props: {
         </p>
       </div>
       <div className="py-5 flex flex-col space-y-3">
-        <h2 className="text-2xl font-bold">Ingredients</h2>
+        <h2 className="text-3xl font-bold">Ingredients</h2>
         <ul className="list-disc list-inside indent-4 space-y-4">
           {recipe.ingredients.map(
             (
@@ -120,11 +127,11 @@ export default async function Page(props: {
           )}
         </ul>
       </div>
-      <h2 className="text-2xl font-bold">Instructions</h2>
-      <ol className="list-none list-inside indent-4 space-y-20">
+      <h2 className="text-3xl font-bold">Instructions</h2>
+      <ol className="list-none list-inside indent-4 space-y-8">
         {recipe.instructions.map((entry, index: number) => (
           <li key={index}>
-            <div className="flex flex-col w-full justify-between items-center space-y-4 text-justify">
+            <div className="flex flex-col w-full justify-between items-center space-y-8 text-justify">
               <div className="w-full space-x-2">
                 <span className="font-bold">{`Step ${index + 1}.`}</span>
                 <span>{entry.step}</span>
@@ -134,10 +141,10 @@ export default async function Page(props: {
                   <Image
                     src={entry.image}
                     alt={"image"}
-                    objectFit="contain"
                     fill
                     quality={100}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ objectFit: "contain" }}
                   />
                 </div>
               )}
@@ -145,6 +152,7 @@ export default async function Page(props: {
           </li>
         ))}
       </ol>
+      <CommentSection recipeId={recipeId} />
     </div>
   );
 }
