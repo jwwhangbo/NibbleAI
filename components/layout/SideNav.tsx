@@ -23,7 +23,7 @@ export default function SideNavbar() {
           user={userData}
         />
       ) : (
-        <Link href="/signin" className="block font-bold w-full flex justify-center items-center px-4 h-[56px] border-b-2">Sign in</Link>
+        <Link href="/auth/signin" className="block font-bold w-full flex justify-center items-center px-4 h-[56px] border-b-2">Sign in</Link>
       )}
 
       <ul className="py-2 flex flex-col gap-2 *:mx-2 *:rounded-lg hover:*:bg-gray-200 *:transition *:transitiion-duration-100">

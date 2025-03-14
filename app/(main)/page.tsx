@@ -55,7 +55,6 @@ export default async function Home() {
 
 async function TrendingRecipeCard({ recipeid }: { recipeid: number }) {
   const recipeData: Recipe = await getRecipe(recipeid);
-  console.log(recipeData);
   
   return (
     <div className="flex flex-auto gap-3">
