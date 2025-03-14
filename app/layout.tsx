@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { roboto } from "@/components/ui/fonts"
 import "./globals.css";
-import { GoogleAdSense } from "@/components/Adsense/Google";
 // import localFont from "next/font/local";
 
 // const geistSans = localFont({
@@ -23,11 +22,14 @@ export const metadata: Metadata = {
     description: "AI Generated Recipes",
     images: [
       {
-        url:"https://storage.nibble-ai.com/logo.png",
+        url: "https://storage.nibble-ai.com/logo.png",
         width: 400,
-        height: 400
-      }
-    ]
+        height: 400,
+      },
+    ],
+  },
+  other: {
+    "google-adsense-account": "ca-pub-2511010321424649",
   },
 };
 
@@ -39,7 +41,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} antialiased`}>{children}</body>
-      <GoogleAdSense />
     </html>
   );
 }
