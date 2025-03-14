@@ -7,7 +7,22 @@ declare global {
   }
 }
 
-import { useEffect } from "react";
+import { FunctionComponent, useEffect } from "react";
+import Script from "next/script";
+
+export const GoogleAdSense: FunctionComponent = () => {
+  if (process.env.NODE_ENV !== "production") {
+    return null;
+  }
+  return (
+    <Script
+      async
+      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2511010321424649`}
+      crossOrigin="anonymous"
+      strategy="lazyOnload"
+    />
+  );
+};
 
 export function AdComponent({
   client,
