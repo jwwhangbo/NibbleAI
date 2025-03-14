@@ -13,7 +13,6 @@ import BackArrow from "@/components/ui/back-arrow";
 import type { Metadata, ResolvingMetadata } from "next";
 import CommentSection from "@/components/recipes/commentSection";
 import { Poppins } from "next/font/google";
-import { Weight } from "lucide-react";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -48,7 +47,7 @@ const NavbarUserProfileWrapper = async ({
   return <NavbarUserProfile {...props} user={{id:userid, ...userInfo}} />;
 };
 
-const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
+const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets:['latin'] });
 
 export default async function Page(props: {
   searchParams: Promise<{ id: number | undefined }>;
