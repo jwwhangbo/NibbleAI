@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache";
 
 export default async function CommentSection({ recipeId }: { recipeId: number }) {
   const session = await auth();
-  const hasRated = await hasUserRatedRecipe(recipeId);
+  const hasRated = session ? await hasUserRatedRecipe(recipeId) : false;
 
   const formAction = async (formData: FormData) => {
     "use server";
