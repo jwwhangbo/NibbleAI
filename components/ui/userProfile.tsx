@@ -43,7 +43,7 @@ export default function UserProfile({
             height="32"
             style={{ objectFit: "cover" }}
           />
-          {!logoOnly && <span>{name || email}</span>}
+          {!logoOnly && <span className="line-clamp-1">{name || email}</span>}
       </div>
     );
   }
@@ -61,7 +61,7 @@ export default function UserProfile({
           height="32"
           style={{ objectFit: "cover" }}
         />
-        {!logoOnly && <span>{name || email}</span>}
+        {!logoOnly && <span className="line-clamp-1">{name || email}</span>}
       </Link>
     </div>
   );

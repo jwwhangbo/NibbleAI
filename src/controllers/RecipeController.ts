@@ -314,3 +314,8 @@ export async function getGeneratingStatus(userid: number) {
   );
   return rows[0]?.is_fetching;
 }
+
+export async function getAllRecipeIds(): Promise<number[]> {
+  const { rows } = await db.query("SELECT array_agg(id) as ids FROM recipes");
+  return rows[0]?.ids ?? [];
+}
