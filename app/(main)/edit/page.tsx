@@ -48,7 +48,7 @@ export default async function Page({
   if (draftDataFromRecipe) {
     const params = new URLSearchParams();
     params.set("draftid", draftDataFromRecipe.id);
-    redirect(`/recipes/edit?${params.toString()}`);
+    redirect(`/edit?${params.toString()}`);
   }
 
   // If no drafts exist for recipe id, create new one and redirect to draft page.
@@ -59,13 +59,12 @@ export default async function Page({
     );
     const params = new URLSearchParams();
     params.set("draftid", draftData.id);
-    redirect(`/recipes/edit?${params.toString()}`);
+    redirect(`/edit?${params.toString()}`);
     // draftId = recipeDraftData.id;
   }
 
   // Fetch draft data from id if it exists
   const recipeDraftData = draftId ? await getDraftFromId(draftId) : undefined;
-
 
   // revoke unauthorized access
   if (recipeDraftData && session?.user.id !== recipeDraftData.userid) {
@@ -74,7 +73,7 @@ export default async function Page({
 
   // redirect requests to draft data that no longer exists.
   if (draftId && !recipeDraftData) {
-    redirect("/recipes/edit");
+    redirect("/edit");
   }
 
   return (

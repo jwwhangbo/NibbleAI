@@ -5,7 +5,7 @@ export default function GalleryActionBar() {
   const { push } = useRouter();
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    push('/recipes/edit');
+    push('/edit');
   }
   return (
     <div className="sticky w-fit bg-white p-1 ml-auto right-4 bottom-4 rounded-full shadow-[0_0_15px_-3px_rgba(0,0,0,0.2)] flex justify-center items-center">

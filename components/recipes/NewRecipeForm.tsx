@@ -31,6 +31,10 @@ export default function NewRecipeForm({
   const [lastSaved, setLastSaved] = useState<Date | undefined>(
     recipeDraftData?.last_saved
   );
+  const [title, setTitle] = useState(recipeDraftData?.title ?? "");
+  const [description, setDescription] = useState(recipeDraftData?.description ?? "");
+  const [servings, setServings] = useState(recipeDraftData?.info?.servings ?? "");
+  const [cookTime, setCookTime] = useState(recipeDraftData?.info?.total_time ?? "");
   const [isSavePending, startSaveTransition] = useTransition();
   const [isSubmitPending, startSubmitTransition] = useTransition();
   const params = useSearchParams();
@@ -46,6 +50,14 @@ export default function NewRecipeForm({
     }
     refresh();
   }, [params, refresh, setDraftIdState]);
+
+  useEffect(() => {
+    setTitle(recipeDraftData?.title ?? "");
+    setDescription(recipeDraftData?.description ?? "");
+    setServings(recipeDraftData?.info?.servings ?? "");
+    setCookTime(recipeDraftData?.info?.total_time ?? "")
+  }, [recipeDraftData]);
+
   /**
    * Handles the save action for the new recipe form.
    *
@@ -243,7 +255,7 @@ export default function NewRecipeForm({
                   if (draftIdState) {
                     await deleteDraft(draftIdState);
                     setDraftIdState(undefined);
-                    push("/recipes/edit");
+                    push("/edit");
                   } else {
                   }
                 }}
@@ -412,7 +424,6 @@ export default function NewRecipeForm({
       onChange={(e) => {
         e.preventDefault();
         if (process.env.NODE_ENV === "development") {
-          console.log("form onChange event is being invoked");
           console.log(e);
         }
         debouncedSaveDraft();
@@ -432,7 +443,8 @@ export default function NewRecipeForm({
         name="title"
         type="text"
         placeholder="title"
-        defaultValue={recipeDraftData?.title}
+        value={title}
+        onChange={(e) => {setTitle(e.target.value)}}
         maxLength={100}
         className="block w-full px-4 py-2 rounded-md border-2 focus:outline-none focus:ring focus:border-blue-500"
       />
@@ -444,11 +456,12 @@ export default function NewRecipeForm({
         id="description"
         name="description"
         maxLength={255}
-        defaultValue={recipeDraftData?.description}
+        value={description}
+        onChange={(e) => {setDescription(e.target.value)}}
         placeholder="a short description about your recipe (max. 255)"
       />
       <p className="text-lg font-semibold">Category</p>
-      <CategorySelect initialValues={recipeDraftData?.category} />
+      <CategorySelect initialValues={recipeDraftData?.category}/>
       <span className="text-lg font-semibold">Recipe Information</span>
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
         <div className="flex gap-2 items-center">
@@ -457,7 +470,8 @@ export default function NewRecipeForm({
             name="servings"
             type="text"
             maxLength={100}
-            defaultValue={recipeDraftData?.info?.servings}
+            value={servings}
+            onChange={(e) => setServings(e.target.value)}
             className="px-4 py-2 w-16 rounded-md border-2 focus:outline-none focus:ring focus:border-blue-500"
           />
           <label htmlFor="servings">Servings</label>
@@ -469,7 +483,8 @@ export default function NewRecipeForm({
             name="total_time"
             type="text"
             maxLength={100}
-            defaultValue={recipeDraftData?.info?.total_time}
+            value={cookTime}
+            onChange={(e) => setCookTime(e.target.value)}
             className="px-4 py-2 rounded-md border-2 focus:outline-none focus:ring focus:border-blue-500"
           />
         </div>
