@@ -5,8 +5,25 @@ import { redirect } from "next/navigation";
 import recommendedHero from "@/public/hero_recommended.png"
 import signinBackdrop from "@/public/signin_backdrop.jpg"
 import { Quicksand } from "next/font/google"
+import { Metadata, ResolvingMetadata } from "next";
 
 const quicksand = Quicksand({subsets: ['latin']});
+
+export async function generateMetadata(
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const parentMetaData = await parent as Metadata;
+  return {
+    ...parentMetaData,
+    title: "Sign in | NibbleAI",
+    description: "Sign in to nibble-ai.com",
+    openGraph: {
+      ...parentMetaData.openGraph,
+      title: "Sign in | NibbleAI",
+      description: "Sign in to nibble-ai.com",
+    },
+  };
+}
 
 export default async function SignInPage(props: {
   searchParams: Promise<{ callbackUrl: string | undefined }>;
