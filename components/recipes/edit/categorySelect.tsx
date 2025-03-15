@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Select,
   SelectContent,
@@ -6,13 +8,38 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { catA, catB, dietary } from "@/src/categories"
+} from "@/components/ui/select";
+import { catA, catB, dietary } from "@/src/categories";
+import { useEffect, useState } from "react";
 
-export function CategorySelect({ initialValues }: { initialValues?: {categoryA: string, categoryB: string, dietary?: string} }) {
+export function CategorySelect({
+  initialValues,
+}: {
+  initialValues?: { categoryA: string; categoryB: string; dietary?: string };
+}) {
+  const [categoriesData, setCategoriesData] = useState<{
+    categoryA: string;
+    categoryB: string;
+    dietary: string;
+  }>(initialValues ? { ...initialValues, dietary: initialValues.dietary ?? '' } : { categoryA: '', categoryB: '', dietary: '' });
+
+  useEffect(() => {
+    setCategoriesData(
+      initialValues
+        ? { ...initialValues, dietary: initialValues.dietary ?? "" }
+        : { categoryA: "", categoryB: "", dietary: "" }
+    );
+  }, [initialValues]);
+
   return (
     <div className="flex gap-4">
-      <Select name="categoryA" defaultValue={initialValues?.categoryA}>
+      <Select
+        name="categoryA"
+        value={categoriesData.categoryA}
+        onValueChange={(e) => {
+          setCategoriesData((prev) => ({ ...prev, categoryA: e }));
+        }}
+      >
         <SelectTrigger className="w-[200px] text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           <SelectValue
             placeholder="Select meal type"
@@ -31,7 +58,13 @@ export function CategorySelect({ initialValues }: { initialValues?: {categoryA: 
         </SelectContent>
       </Select>
 
-      <Select name="categoryB" defaultValue={initialValues?.categoryB}>
+      <Select
+        name="categoryB"
+        value={categoriesData.categoryB}
+        onValueChange={(e) => {
+          setCategoriesData((prev) => ({ ...prev, categoryB: e }));
+        }}
+      >
         <SelectTrigger className="w-[200px] text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           <SelectValue
             placeholder="Select cuisine"
@@ -50,7 +83,13 @@ export function CategorySelect({ initialValues }: { initialValues?: {categoryA: 
         </SelectContent>
       </Select>
 
-      <Select name="dietary" defaultValue={initialValues?.dietary}>
+      <Select
+        name="dietary"
+        value={categoriesData.dietary}
+        onValueChange={(e) => {
+          setCategoriesData((prev) => ({ ...prev, dietary: e }));
+        }}
+      >
         <SelectTrigger className="w-[200px] text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           <SelectValue
             placeholder="Select dietary preference"
@@ -74,4 +113,3 @@ export function CategorySelect({ initialValues }: { initialValues?: {categoryA: 
     </div>
   );
 }
-

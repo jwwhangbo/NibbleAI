@@ -94,7 +94,7 @@ export default async function Page(props: {
             <div className="rounded-md flex *:px-4 *:py-2 border-2 border-gray-300 w-fit overflow-hidden">
               <Link
                 className="hover:bg-orange-100"
-                href={`recipes/edit?id=${recipe.id}`}
+                href={`/edit?id=${recipe.id}`}
               >
                 Edit
               </Link>
