@@ -57,22 +57,24 @@ async function TrendingRecipeCard({ recipeid }: { recipeid: number }) {
   const recipeData: Recipe = await getRecipe(recipeid);
   
   return (
-    <div className="flex flex-auto gap-3">
-      <div className="relative aspect-square basis-1/3">
-        <Image
-          src={recipeData.thumbnail || landscapePlaceholder}
-          alt="thumbnail"
-          fill
-          style={{ objectFit: "cover" }}
-        />
+    <Link href={`/recipes/${recipeid}`}>
+      <div className="flex flex-auto gap-3">
+        <div className="relative aspect-square basis-1/3">
+          <Image
+            src={recipeData.thumbnail || landscapePlaceholder}
+            alt="thumbnail"
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <div className="basis-2/3 flex flex-col justify-center">
+          <p className="uppercase text-sm text-gray-500 font-semibold">
+            {recipeData.category.categoryA.replace("_", " ")}
+          </p>{" "}
+          <h4 className="text-lg font-semibold">{recipeData.title}</h4>
+        </div>
       </div>
-      <div className="basis-2/3 flex flex-col justify-center">
-        <p className="uppercase text-sm text-gray-500 font-semibold">
-          {recipeData.category.categoryA.replace("_", " ")}
-        </p>{" "}
-        <h4 className="text-lg font-semibold">{recipeData.title}</h4>
-      </div>
-    </div>
+    </Link>
   );
 
 }
@@ -81,7 +83,7 @@ async function FeaturedRecipeCard({ recipeid, size="lg" }: { recipeid: number, s
   const recipeData: Recipe = await getRecipe(recipeid);
   return (
     <Link
-      href={`/recipes?id=${recipeid}`}
+      href={`/recipes/${recipeid}`}
       className={clsx("sm:basis-3/4 space-y-2", {"sm:max-w-[70%]": size === "lg"})}
     >
       <div className="relative w-full aspect-[5/4]">

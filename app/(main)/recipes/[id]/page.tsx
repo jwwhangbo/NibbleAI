@@ -50,9 +50,9 @@ const NavbarUserProfileWrapper = async ({
 const poppins = Poppins({ weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], subsets:['latin'] });
 
 export default async function Page(props: {
-  searchParams: Promise<{ id: number | undefined }>;
+  params: Promise<{ id: number | undefined }>;
 }) {
-  const recipeId = (await props.searchParams)?.id;
+  const recipeId = (await props.params)?.id;
   if (!recipeId) {
     throw new Error("Could not find recipe");
   }

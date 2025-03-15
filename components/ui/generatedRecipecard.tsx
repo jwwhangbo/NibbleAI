@@ -10,7 +10,7 @@ export default function RecipeCard({ recipeDataPromise, saved }: { recipeDataPro
   const r2ap = process.env.NEXT_PUBLIC_R2_AP;
   return (
     <div className="group grow overflow-hidden sm:basis-1/4">
-      <Link href={`/recipes?id=${recipeData.id}`} className="flex flex-col gap-4 ">
+      <Link href={`/recipes/${recipeData.id}`} className="flex flex-col gap-4 ">
         <div className="relative w-full aspect-[5/3]">
           <Image
             src={

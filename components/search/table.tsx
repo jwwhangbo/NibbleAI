@@ -20,9 +20,7 @@ export default async function RecipesTable({
     <div className="w-full pt-4 sm:flex sm:flex-col sm:gap-4">
       {searchResults.map(async (row) => {
         const user = await getUserInfo(row.userid);
-        const params = new URLSearchParams();
-        params.set("id", row.id);
-        const url = `/recipes?${params.toString()}`;
+        const url = `/recipes/${row.id}`;
         return (
           <div
             key={row.id}

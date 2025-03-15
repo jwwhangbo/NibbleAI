@@ -6,7 +6,7 @@ import recommendedHero from "@/public/hero_recommended.png"
 import signinBackdrop from "@/public/signin_backdrop.jpg"
 import { Quicksand } from "next/font/google"
 
-const quicksand = Quicksand();
+const quicksand = Quicksand({subsets: ['latin']});
 
 export default async function SignInPage(props: {
   searchParams: Promise<{ callbackUrl: string | undefined }>;
