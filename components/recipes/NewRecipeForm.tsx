@@ -222,9 +222,7 @@ export default function NewRecipeForm({
         formValues as RecipeDraft,
         draftIdState
       );
-      const params = new URLSearchParams();
-      params.set("id", recipeId);
-      push(`/recipes?${params.toString()}`);
+      push(`/recipes/${recipeId}`);
     }
     // *************************************************************
     // ***************** For debugging purposes ********************

@@ -35,7 +35,7 @@ export default function RecipeCard({
         { "sm:aspect-[3/4] aspect-[1/1] sm:w-[242px]": isPortraitMode }
       )}
     >
-      <Link href={`/recipes?id=${recipe.id.toString()}`}>
+      <Link href={`/recipes/${recipe.id.toString()}`}>
         <div
           className={`relative ${
             isPortraitMode ? "w-full aspect-[5/3]" : "h-full aspect-[1/1]"
