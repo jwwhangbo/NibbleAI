@@ -15,14 +15,14 @@ import CommentSection from "@/components/recipes/commentSection";
 import { Poppins } from "next/font/google";
 
 type Props = {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
+  params: Promise<{ [key: string]: string | undefined }>;
 };
 
 export async function generateMetadata(
-  { searchParams }: Props,
+  { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { id } = await searchParams;
+  const { id } = await params;
   const parentMetaData = await parent;
   if (!id) {
     return parentMetaData as Metadata;
