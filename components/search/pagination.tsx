@@ -20,11 +20,7 @@ export default function Pagination({
   let pages: number[] = [];
 
   if (totalPages > 0) {
-    pages = Array.from(
-      Array(totalPages)
-        .keys()
-        .map((i) => i + 1)
-    );
+    pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   }
   return (
     <div {...props}>
