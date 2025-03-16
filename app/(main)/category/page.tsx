@@ -76,7 +76,7 @@ export default async function Page({
       <div className="mx-2">
         <CategorySelectWrapper />
       </div>
-      <div className="mx-2 grid grid-cols-1 min-[450px]:grid-cols-2 min-[450px]:gap-4 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="mx-2 grid grid-cols-1 min-[450px]:grid-cols-2 min-[450px]:gap-4 `md:grid-cols-3 lg:grid-cols-4 gap-3">
         {recipeIds.map((recipeData) => (
           <RecipeCard recipeData={recipeData} key={recipeData.id} />
         ))}
@@ -96,7 +96,6 @@ async function RecipeCard({
 }) {
   const r2ap = process.env.NEXT_PUBLIC_R2_AP;
   const ratings = await getRecipeRatingAvgAndCount(recipeData.id);
-  console.log(ratings);
 
   return (
     <Link href={`/recipes/${recipeData.id}`}>
