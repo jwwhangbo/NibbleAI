@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import recommendedHero from "@/public/hero_recommended.png"
 import signinBackdrop from "@/public/signin_backdrop.jpg"
 import { Quicksand } from "next/font/google"
-import { Metadata, ResolvingMetadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 
 const quicksand = Quicksand({subsets: ['latin']});
 
