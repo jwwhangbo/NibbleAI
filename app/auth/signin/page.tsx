@@ -12,15 +12,15 @@ const quicksand = Quicksand({subsets: ['latin']});
 export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const parentMetaData = await parent as Metadata;
+  const parentMetaData = await parent;
   return {
-    ...parentMetaData,
     title: "Sign in | NibbleAI",
     description: "Sign in to nibble-ai.com",
     openGraph: {
       ...parentMetaData.openGraph,
       title: "Sign in | NibbleAI",
       description: "Sign in to nibble-ai.com",
+      url: parentMetaData.openGraph?.url ?? undefined,
     },
   };
 }
