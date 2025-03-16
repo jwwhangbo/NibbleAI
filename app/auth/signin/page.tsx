@@ -37,11 +37,11 @@ export default async function SignInPage(props: {
     redirect("/");
   }
   return (
-    <div className="flex h-dvh w-screen">
-      <div className="flex h-full w-full min-[800px]:max-w-[520px]">
+    <div className="flex h-dvh overflow-y-scroll w-screen">
+      <div className="flex w-full lg:max-w-[520px]">
         <Panel className="m-auto" callbackUrl={callbackUrl} />
       </div>
-      <div className="hidden md:block relative min-[800px]:flex w-full h-full">
+      <div className="hidden relative lg:flex w-full">
         <Image src={signinBackdrop} alt="background" fill style={{objectFit:"cover",zIndex:-10, opacity:0.7}}/>
         <div className="flex flex-col w-full justify-center items-center">
           <Image
