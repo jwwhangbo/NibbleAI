@@ -28,6 +28,9 @@ export const metadata: Metadata = {
       },
     ],
   },
+  icons: {
+    icon: "https://storage.nibble-ai.com/logo_cropped.png"
+  },
   other: {
     "google-adsense-account": "ca-pub-2511010321424649",
   },

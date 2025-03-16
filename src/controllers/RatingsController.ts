@@ -76,3 +76,9 @@ export async function addRatingsWithRecipeId(
   const { rows } = await queryPromise;
   return rows[0].id;
 }
+
+export async function getRecipeRatingAvgAndCount(recipeid: number) {
+  const query = "SELECT COUNT(*) as ratings_count, AVG(rating_stars) as average_rating FROM recipes_ratings WHERE recipeid=$1 GROUP BY recipeid";
+  const { rows } = await db.query(query, [recipeid]);
+  return rows[0] ?? { average_rating: 0, ratings_count: 0 };
+}

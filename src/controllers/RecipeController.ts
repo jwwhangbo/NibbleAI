@@ -319,3 +319,69 @@ export async function getAllRecipeIds(): Promise<number[]> {
   const { rows } = await db.query("SELECT array_agg(id) as ids FROM recipes");
   return rows[0]?.ids ?? [];
 }
+
+export async function getRecipesByCategory(category: {categoryA?: string, categoryB?: string, dietary?: string}, page?: number) {
+  const conditions = [];
+  const values = [];
+  const limit = 12;
+  const offset = page && page > 1 ? limit * page : 0;
+
+  if (category.categoryA) {
+    conditions.push(`category->>'categoryA' = $${conditions.length + 1}`);
+    values.push(category.categoryA);
+  }
+
+  if (category.categoryB) {
+    conditions.push(`category->>'categoryB' = $${conditions.length + 1}`);
+    values.push(category.categoryB);
+  }
+
+  if (category.dietary) {
+    conditions.push(`category->>'dietary' = $${conditions.length + 1}`);
+    values.push(category.dietary);
+  }
+
+  const query = `
+    SELECT *
+    FROM recipes
+    ${conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''}
+    LIMIT 12
+    OFFSET $${conditions.length + 1}
+  `;
+
+  const { rows } = await db.query(query, [...values, offset]);
+  return rows;
+}
+
+export async function getTotalPagesRecipesFilteredByCategory(category: {
+  categoryA?: string;
+  categoryB?: string;
+  dietary?: string;
+}) {
+  const conditions = [];
+  const values = [];
+
+  if (category.categoryA) {
+    conditions.push(`category->>'categoryA' = $${conditions.length + 1}`);
+    values.push(category.categoryA);
+  }
+
+  if (category.categoryB) {
+    conditions.push(`category->>'categoryB' = $${conditions.length + 1}`);
+    values.push(category.categoryB);
+  }
+
+  if (category.dietary) {
+    conditions.push(`category->>'dietary' = $${conditions.length + 1}`);
+    values.push(category.dietary);
+  }
+
+  const query = `
+    SELECT COUNT(*) as count
+    FROM recipes
+    ${conditions.length ? `WHERE ${conditions.join(" AND ")}` : ""}
+  `;
+
+  const { rows } = await db.query(query, values);
+  return rows[0].count;
+}
