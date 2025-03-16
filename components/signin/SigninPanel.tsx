@@ -15,7 +15,7 @@ export default function Panel({
   return (
     <div
       className={clsx([
-        "min-w-[375px] max-w-[393px] h-full flex flex-col px-[30px] items-center gap-[9px] justify-center pb-[120px]",
+        "min-w-[375px] max-w-[393px] flex flex-col px-[30px] items-center gap-[9px] justify-center pb-[120px]",
         className,
       ])}
     >
