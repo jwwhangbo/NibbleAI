@@ -9,7 +9,13 @@ import type { Metadata, ResolvingMetadata } from "next";
 
 const quicksand = Quicksand({subsets: ['latin']});
 
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
 export async function generateMetadata(
+  {  }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const parentMetaData = await parent;
