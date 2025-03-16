@@ -115,17 +115,17 @@ async function RecipeCard({
         </div>
         <div className="space-y-2 mt-4">
           <div className="flex gap-2">
-            {recipeData.category.categoryA && (
+            {recipeData.category?.categoryA && (
               <CategoryTag
                 body={recipeData.category.categoryA.replace("_", " ")}
               />
             )}
-            {recipeData.category.categoryB && (
+            {recipeData.category?.categoryB && (
               <CategoryTag
                 body={recipeData.category.categoryB.replace("_", " ")}
               />
             )}
-            {recipeData.category.dietary && (
+            {recipeData.category?.dietary && (
               <CategoryTag
                 body={recipeData.category.dietary.replace("_", " ")}
               />
