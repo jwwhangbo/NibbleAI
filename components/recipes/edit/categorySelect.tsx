@@ -42,7 +42,6 @@ export function CategorySelect({
     ) {
       onValueChange(categoriesData);
     }
-    console.log(categoriesData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoriesData]);
 
