@@ -13,7 +13,7 @@ export default async function Comments({ recipeId, userid }: { recipeId: number,
         <div key={`comment-${idx}`}>
           <div className="flex justify-between items-start">
             <CommentUserProfile userid={comment.userid} key={idx} />
-            <CommentDropdownActions authorized={comment.userid === userid} />
+            <CommentDropdownActions authorized={comment.userid === userid} comment={comment} />
           </div>
           <div className="flex gap-2 items-center mb-4">
             <RatingsHandler
@@ -23,7 +23,7 @@ export default async function Comments({ recipeId, userid }: { recipeId: number,
               size="sm"
             />
             <time className="text-sm text-gray-500">
-              {formatDistanceToNow(comment.date_created, { addSuffix: true })}
+              {formatDistanceToNow(comment.date_updated || comment.date_created, { addSuffix: true })}
             </time>
           </div>
           {comment.rating_description && (

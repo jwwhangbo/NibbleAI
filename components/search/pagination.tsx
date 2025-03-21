@@ -26,15 +26,15 @@ export default function Pagination({
     <div {...props}>
       {pages.map((page) => (
         <Link
-          className={clsx([
-            { "hover:text-blue-500": currentPage != page },
-            { "text-red-400": currentPage == page },
-          ])}
+          className={clsx("p-1 w-8 h-8 rounded-full text-center",
+            { "hover:bg-orange-100": currentPage != page },
+            { "bg-orange-300 font-bold text-white": currentPage == page },
+          )}
           key={page}
           href={createPageUrl(page)}
           replace
         >
-          <p>{page}</p>
+          {page}
         </Link>
       ))}
     </div>

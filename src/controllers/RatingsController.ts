@@ -28,13 +28,13 @@ export async function hasUserRatedRecipe(recipeid: number, client?: PoolClient) 
 export async function getRatingsFromRecipeId(
   recipeid: number,
   client?: PoolClient
-): Promise<Comment[]> {
+): Promise<(Comment & { id: number })[]> {
   const query = "SELECT * FROM recipes_ratings WHERE recipeid=$1 ORDER BY date_created DESC";
   const queryPromise = client
     ? client.query(query, [recipeid])
     : db.query(query, [recipeid]);
 
-  return (await queryPromise).rows;
+  return (await queryPromise).rows as ((Comment&{id:number})[]);
 }
 
 export async function getRatingCountForUserId(userid: number, client?: PoolClient) {
@@ -75,6 +75,33 @@ export async function addRatingsWithRecipeId(
 
   const { rows } = await queryPromise;
   return rows[0].id;
+}
+
+export async function updateRatingsWithRatingId(
+  ratingid: number,
+  rating: { rating_stars: number; rating_description?: string},
+  client? : PoolClient
+) {
+  const session = await auth();
+  if (!session) {
+    throw Error("Unauthorized Access");
+  }
+  const conditions=[];
+  const values=[];
+
+  if (rating.rating_description) {
+    conditions.push(`rating_description=$${conditions.length + 1}`);
+    values.push(rating.rating_description);
+  } else {
+    conditions.push(`rating_description=$${conditions.length + 1}`);
+    values.push(null);
+  }
+  conditions.push(`rating_stars=$${conditions.length + 1}`);
+  values.push(rating.rating_stars);
+
+  const query = `UPDATE recipes_ratings SET date_updated=now(), ${conditions.join(', ')}`;
+  const queryPromise = client ? client.query(query, values) : db.query(query, values);
+  await queryPromise;
 }
 
 export async function getRecipeRatingAvgAndCount(recipeid: number) {

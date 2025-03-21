@@ -67,7 +67,7 @@ export async function fetchQueriedRecipes(query: string, currentPage: number) {
   const offset = (currentPage - 1) * 6;
 
   const stmt = `
-    SELECT r.*, AVG(rt.rating_stars) as average_rating
+    SELECT r.*, AVG(rt.rating_stars) as average_rating, COUNT(rt.*) as total_ratings
     FROM recipes r
     LEFT JOIN recipes_ratings rt
     ON rt.recipeid=r.id

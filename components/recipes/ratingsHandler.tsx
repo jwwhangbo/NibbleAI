@@ -14,7 +14,7 @@ export default function RatingsHandler({
   disabled?: boolean;
   size: "sm" | "lg";
 }) {
-  const [rating, setRating] = useState<number | undefined>();
+  const [rating, setRating] = useState<number | undefined>(value);
   const [hoverValue, setHoverValue] = useState<number | undefined>();
 
   return (

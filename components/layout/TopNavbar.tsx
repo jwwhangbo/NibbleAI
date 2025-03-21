@@ -6,16 +6,26 @@ import HamburgerButton from "@/components/ui/HamburgerButton";
 import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 import clsx from "clsx";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Navlinks from "./Navlinks";
 import { useSession } from "next-auth/react";
 import UserDropdownMenu from "./userDropdown";
 
 export default function TopNavbar() {
   const { data: session, status } = useSession();
-  const pathname = usePathname();
-  const onSearch = pathname.split("/").includes("search");
   const navbarStore = useNavbarStore((s) => s);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const onSearch = pathname.split("/").includes("search");
+
+  const generateCallbackUrl = () => {
+    const params = new URLSearchParams();
+    params.set(
+      "callbackUrl",
+      searchParams ? `${pathname}?${searchParams.toString()}` : pathname
+    );
+    return `/auth/signin?${params.toString()}`;
+  };
 
   return (
     <div
@@ -73,7 +83,7 @@ export default function TopNavbar() {
             ) : session ? (
               <UserDropdownMenu user={session.user} />
             ) : (
-              <Link href="/auth/signin" className="h-fit">
+              <Link href={generateCallbackUrl()} className="h-fit">
                 Sign In
               </Link>
             )}

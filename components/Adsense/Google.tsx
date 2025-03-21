@@ -34,7 +34,7 @@ export function AdComponent({
 }: {
   client: string;
   slot: string;
-  format: string;
+  format?: string;
   layout?: string;
   style?: React.CSSProperties;
   responsive?: boolean;
@@ -67,7 +67,7 @@ export function AdComponent({
       style={{ display: "block", ...style }}
       data-ad-client={client}
       data-ad-slot={slot}
-      data-ad-format={format}
+      {...(format && {'data-ad-format':format})}
       {...(layout && { 'data-ad-layout': layout })}
       {...(responsive && { 'data-full-width-responsive': responsive })}
     ></ins>

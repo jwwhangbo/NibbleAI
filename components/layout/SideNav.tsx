@@ -4,11 +4,23 @@ import { useNavbarStore } from "@/src/providers/navbar-store-provider";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function SideNavbar() {
   const { active } = useNavbarStore((state) => state);
   const {data : session} = useSession();
   const userData = session?.user;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const generateCallbackUrl = () => {
+    const params = new URLSearchParams();
+    params.set(
+      "callbackUrl",
+      searchParams ? `${pathname}?${searchParams.toString()}` : pathname
+    );
+    return `/auth/signin?${params.toString()}`;
+  };
+  
   return (
     <div
       className={clsx([
@@ -24,7 +36,7 @@ export default function SideNavbar() {
         />
       ) : (
         <Link
-          href="/auth/signin"
+          href={generateCallbackUrl()}
           className="block font-bold w-full flex justify-center items-center px-4 h-[56px] border-b-2"
         >
           Sign in
