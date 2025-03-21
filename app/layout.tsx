@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { roboto } from "@/components/ui/fonts"
+import { roboto } from "@/components/ui/fonts";
 import "./globals.css";
+import type { WebSite, WithContext } from "schema-dts";
+import Script from "next/script";
 // import localFont from "next/font/local";
 
 // const geistSans = localFont({
@@ -13,6 +15,13 @@ import "./globals.css";
 //   variable: "--font-geist-mono",
 //   weight: "100 900",
 // });
+const jsonLd: WithContext<WebSite> = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "NibbleAI",
+  url: "https://nibble-ai.com",
+  alternateName: ["nibbleAI", "Nibbleai", "nibbleai", "nibble-ai.com"],
+};
 
 export const metadata: Metadata = {
   title: "NibbleAI | AI Generated Recipes",
@@ -41,6 +50,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} antialiased`}>{children}</body>
+      <Script
+        id="json-ld-script"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </html>
   );
 }
