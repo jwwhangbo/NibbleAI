@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import LoadingIndicator from "../ui/LoadingIndicator";
-import { signIn } from "next-auth/react"; // FIXME: use this instead
+import { signIn } from "next-auth/react";
 
 export default function EmailSigninHandler({
   callbackUrl,
 }: {
-  callbackUrl?: string;
+  callbackUrl: string;
 }) {
   enum SubmissionState {
     ready = "ready",

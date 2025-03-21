@@ -8,16 +8,17 @@ import EmailSigninHandler from "./EmailSigninHandler";
 export default function Panel({
   callbackUrl,
   className,
+  ...props
 }: {
-  callbackUrl?: string;
-  className?: string;
-}) {
+  callbackUrl: string;
+} & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={clsx([
         "min-w-[375px] max-w-[393px] flex flex-col px-[30px] items-center gap-[9px] justify-center pb-[120px]",
         className,
       ])}
+      {...props}
     >
       <Image
         className="mb-4"
