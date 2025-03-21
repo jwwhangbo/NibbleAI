@@ -36,7 +36,8 @@ export default function CommentBody({
             "whitespace-pre-wrap",
             "truncate",
             "h-fit",
-            "leading-none"
+            "leading-none",
+            "pb-1",
           )}
         >
           {body}
