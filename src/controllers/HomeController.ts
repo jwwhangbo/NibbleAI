@@ -26,3 +26,17 @@ export async function getTrendingRecipes(interval: Date, limit: number) {
   const { rows } = await db.query(query, [interval, limit]);
   return rows;
 }
+
+export async function getRecentRatings(interval: Date, limit:number): Promise<{userid: number, recipeid: number, rating_description:string, final_date:Date}[]> {
+  const query = `
+    SELECT userid, recipeid, rating_description, COALESCE(date_updated, date_created) AS final_date
+    FROM recipes_ratings 
+    WHERE (date_updated IS NOT NULL AND date_updated > $1) OR (date_updated IS NULL AND date_created > $1)
+      AND rating_description IS NOT NULL
+      AND rating_description <> ''
+    ORDER BY final_date DESC
+    LIMIT $2
+  `;
+  const { rows } = await db.query(query, [interval, limit]);
+  return rows;
+}
