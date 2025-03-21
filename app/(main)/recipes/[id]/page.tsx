@@ -65,9 +65,7 @@ export default async function Page(props: {
   const session = await auth();
 
   return (
-    <div
-      className={`px-[17px] flex flex-col space-y-3 ${poppins.className}`}
-    >
+    <div className={`px-[17px] flex flex-col space-y-3 ${poppins.className}`}>
       <BackArrow className="w-fit" />
       <div className="flex flex-col sm:flex-row gap-4">
         {recipe.thumbnail && (
@@ -90,6 +88,19 @@ export default async function Page(props: {
               userid={recipe.userid}
             />
           </Suspense>
+          <time className="italic text-gray-400">
+            {recipe.date_updated
+              ? `Updated on ${recipe.date_updated.toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}`
+              : `Created on ${recipe.date_created.toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}`}
+          </time>
           {session && session.user.id === recipe.userid && (
             <div className="rounded-md flex *:px-4 *:py-2 border-2 border-gray-300 w-fit overflow-hidden">
               <Link
