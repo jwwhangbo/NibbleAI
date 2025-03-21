@@ -11,6 +11,7 @@ import Pagination from "@/components/search/pagination";
 import { Metadata, ResolvingMetadata } from "next";
 import { getRecipeRatingAvgAndCount } from "@/src/controllers/RatingsController";
 import RatingsHandler from "@/components/recipes/ratingsHandler";
+import { CategoryTag } from "@/components/ui/categoryTag";
 
 export async function generateMetadata(
   {
@@ -68,7 +69,7 @@ export default async function Page({
   });
   // console.log(recipeIds.slice(0, 4));
   return (
-    <main className="pt-6 space-y-5">
+    <main className="pt-6 space-y-5 mb-2">
       <h1 className="text-2xl font-bold ml-2 capitalize">
         Category:{" "}
         {[catA, catB, dietary].filter(Boolean).join(", ").replace("_", " ")}
@@ -82,8 +83,8 @@ export default async function Page({
         ))}
       </div>
       <Pagination
-        className="flex gap-2 justify-center mt-4"
-        totalPages={Math.ceil(recipeCount / 12)}
+        className="mx-auto w-fit flex justify-center rounded-full py-1 px-2 bg-slate-100"
+        totalPages={(recipeCount / 12)}
       />
     </main>
   );
@@ -146,11 +147,3 @@ async function RecipeCard({
     </Link>
   );
 }
-
-const CategoryTag = ({ body }: { body: string }) => {
-  return (
-    <div className="py-1 px-2 w-fit rounded-lg bg-orange-200 text-xs capitalize">
-      <p>{body}</p>
-    </div>
-  );
-};
