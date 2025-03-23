@@ -24,41 +24,54 @@ export default async function Home() {
 
   return (
     <div>
-      <main className="my-6">
-        <AdComponent
-          client={"ca-pub-2511010321424649"}
-          slot={"7704565351"}
-          format={"auto"}
-          responsive={true}
-        />
-        <h1 className="px-3 sm:px-1 text-3xl font-bold mb-4">
-          Featured Recipes
-        </h1>
-        {/* featured recipe cards */}
-        <div className="flex flex-col sm:flex-row w-full px-3 sm:px-1 gap-3 sm:max-h-[850px] sm:justify-center">
-          {/** first featured recipe card */}
-          <FeaturedRecipeCard recipeid={featured[0]} />{" "}
-          {/** Side featured cards */}
-          <div className="flex flex-col flex-1 gap-2 sm:max-w-[20%]">
-            <FeaturedRecipeCard recipeid={featured[1]} size="sm" />
-            <FeaturedRecipeCard recipeid={featured[2]} size="sm" />
-            <FeaturedRecipeCard recipeid={featured[3]} size="sm" />
-          </div>
+      <main className="mb-6">
+        <div className="py-2">
+          <AdComponent
+            client={"ca-pub-2511010321424649"}
+            slot={"7704565351"}
+            format={"auto"}
+            responsive={true}
+          />
         </div>
-        <div className="w-full flex items-center justify-center">
+        <section className="relative py-8">
+          <div className="block absolute inset-y-0 bg-orange-100 -z-10 w-screen -left-[calc((100vw-100%)/2)]" />
+          <div>
+            <h1 className="px-3 sm:px-1 text-3xl font-bold mb-4">
+              Featured Recipes
+            </h1>
+            {/* featured recipe cards */}
+            <div className="flex flex-col sm:flex-row w-full px-3 sm:px-1 gap-3 sm:max-h-[850px] sm:justify-center">
+              {/** first featured recipe card */}
+              <FeaturedRecipeCard recipeid={featured[0]} />{" "}
+              {/** Side featured cards */}
+              <div className="flex flex-col flex-1 gap-2 sm:max-w-[20%]">
+                <FeaturedRecipeCard recipeid={featured[1]} size="sm" />
+                <FeaturedRecipeCard recipeid={featured[2]} size="sm" />
+                <FeaturedRecipeCard recipeid={featured[3]} size="sm" />
+              </div>
+            </div>
+          </div>
+        </section>
+        <div className="w-full flex items-center justify-center py-2">
           <AdComponent
             client={"ca-pub-2511010321424649"}
             slot={"2084573014"}
-            style={{display:"inline-block", width:"728px", height:"90px"}}
+            style={{ display: "inline-block", width: "728px", height: "90px" }}
           />
         </div>
-        <h1 className="px-3 sm:px-1 text-3xl font-bold mb-4">Trending Now</h1>
-        {/* trending cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-max gap-4 px-3 sm:px-6">
-          {trendingRecipes.map((row) => (
-            <TrendingRecipeCard recipeid={row.id} key={row.id} />
-          ))}
-        </div>
+        <section className="py-8 mb-16">
+          <div>
+            <h1 className="px-3 sm:px-1 text-3xl font-bold mb-4">
+              Trending Now
+            </h1>
+            {/* trending cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-max gap-4 px-3 sm:px-6">
+              {trendingRecipes.map((row) => (
+                <TrendingRecipeCard recipeid={row.id} key={row.id} />
+              ))}
+            </div>
+          </div>
+        </section>
         <h2 className="px-3 sm:px-0 text-2xl font-bold my-4">
           See what others are making
         </h2>
