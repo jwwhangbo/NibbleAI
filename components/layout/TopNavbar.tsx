@@ -36,26 +36,30 @@ export default function TopNavbar() {
     >
       <div className="relative m-auto flex w-full max-w-[1200px] h-[56px] sm:h-[100px] px-[17px] sm:px-[30px] justify-between items-center">
         <HamburgerButton className="sm:!hidden" />
-        <Image
-          src={logoLandscape}
-          width="256"
-          height="256"
-          alt="logo"
-          // style={{ width: "auto", height: "auto" }}
-          quality={100}
-          priority={true}
-          className="h-2/5 w-auto hidden sm:block"
-        />
-        <Image
-          src={logoOnly}
-          width="256"
-          height="256"
-          alt="logo"
-          // style={{ width: "auto", height: "auto" }}
-          quality={100}
-          priority={true}
-          className="h-[40px] w-[40px] sm:hidden"
-        />
+        <Link href={"/"} className="hidden sm:block h-2/5 w-auto">
+          <Image
+            src={logoLandscape}
+            width="256"
+            height="256"
+            alt="logo"
+            // style={{ width: "auto", height: "auto" }}
+            quality={100}
+            priority={true}
+            className="h-full w-full"
+          />
+        </Link>
+        <Link href={"/"} className="sm:hidden">
+          <Image
+            src={logoOnly}
+            width="256"
+            height="256"
+            alt="logo"
+            // style={{ width: "auto", height: "auto" }}
+            quality={100}
+            priority={true}
+            className="h-[40px] w-[40px]"
+          />
+        </Link>
         <div className="flex gap-4 items-center">
           {!onSearch ? (
             <Link href={"/search"} title="search">
