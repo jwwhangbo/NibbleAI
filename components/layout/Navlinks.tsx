@@ -15,7 +15,7 @@ export default function Navlinks() {
           <NavigationMenu.Link
             className={clsx([
               "block py-2 px-4 rounded-lg text-sm hover:underline decoration-[#ff8a00] decoration-2 underline-offset-2 font-semibold tracking-widest",
-              { "underline pointer-events-none": path === "/" },
+              { "underline": path === "/" },
             ])}
             href="/"
           >
@@ -89,7 +89,7 @@ export default function Navlinks() {
             className={clsx([
               "block py-2 px-4 rounded-lg hover:underline decoration-[#ff8a00] decoration-2 underline-offset-2 text-sm font-semibold tracking-widest",
               {
-                "underline pointer-events-none": startsWith === "dashboard",
+                "underline": startsWith === "dashboard",
               },
             ])}
             href="/dashboard"
@@ -102,10 +102,10 @@ export default function Navlinks() {
             className={clsx([
               "block py-2 px-4 rounded-lg hover:underline decoration-[#ff8a00] decoration-2 underline-offset-2 text-sm font-semibold tracking-widest",
               {
-                "underline pointer-events-none": startsWith === "saved",
+                "underline": startsWith === "saved",
               },
             ])}
-            href="/saved"
+            href="/saved/myrecipe"
           >
             SAVED
           </NavigationMenu.Link>
