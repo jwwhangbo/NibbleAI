@@ -36,7 +36,7 @@ export default function TopNavbar() {
     >
       <div className="relative m-auto flex w-full max-w-[1200px] h-[56px] sm:h-[100px] px-[17px] sm:px-[30px] justify-between items-center">
         <HamburgerButton className="sm:!hidden" />
-        <Link href={"/"} className="hidden sm:block h-2/5 w-auto">
+        <Link href={"/"} className="hidden sm:block h-2/5 w-fit">
           <Image
             src={logoLandscape}
             width="256"
@@ -45,7 +45,7 @@ export default function TopNavbar() {
             // style={{ width: "auto", height: "auto" }}
             quality={100}
             priority={true}
-            className="h-full w-full"
+            className="h-full w-auto"
           />
         </Link>
         <Link href={"/"} className="sm:hidden">
