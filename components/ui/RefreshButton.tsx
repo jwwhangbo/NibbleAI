@@ -33,7 +33,7 @@ export default function RefreshButton() {
     };
 
     fetchPendingStatus();
-    const interval = setInterval(fetchPendingStatus, 5000);
+    const interval = setInterval(fetchPendingStatus, 15000);
 
     return () => clearInterval(interval);
   }, []);
