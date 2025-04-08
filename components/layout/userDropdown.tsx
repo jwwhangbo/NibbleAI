@@ -2,9 +2,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import UserProfile from "../ui/userProfile";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
-import Image from "next/image";
-import fallback from "@/public/landscape-placeholder.png"
-import Link from "next/link";
+import { ManageButton, SignoutButton } from "../ui/profileButtons";
 
 export default function UserDropdownMenu({ user }: { user: Session["user"] }) {
   return (
@@ -16,45 +14,33 @@ export default function UserDropdownMenu({ user }: { user: Session["user"] }) {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[220px] rounded-md bg-gray-200 p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] z-10"
+          className="min-w-96 rounded-md bg-white py-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] z-10 data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
           sideOffset={5}
+          collisionPadding={{ right: 20 }}
         >
-          <DropdownMenu.Label className="text-sm px-[5px] py-2 flex flex-col gap-2 ">
-            <Image
-              src={user.image || fallback}
-              height="100"
-              width="100"
-              alt="Profile picture"
-              style={{
-                borderRadius: "9999px",
-                objectFit: "cover",
-                margin: "auto",
-                height: "100px",
-                width: "100px",
-              }}
+          <DropdownMenu.Label className="text-sm px-4 mt-2 flex flex-col gap-2 ">
+            <UserProfile
+              disabled
+              user={user}
+              displayEmail
+              className="flex gap-2 items-center"
             />
-            <p className="text-center text-xl">
-              Hello, {user.name}
-              <br />
-              <span className="text-sm">{user.email}</span>
-            </p>
           </DropdownMenu.Label>
-          <DropdownMenu.Item
-            className="text-sm group relative flex h-[25px] select-none items-center rounded-[3px] px-[5px] text-[13px] leading-none text-black outline-none data-[highlighted]:bg-[#ffcd80] data-[highlighted]:cursor-pointer data-[disabled]:text-gray-500 data-[highlighted]:text-black"
+          <DropdownMenu.Group className="flex gap-2 px-4 pl-12 my-3">
+            <DropdownMenu.Item asChild>
+              <ManageButton />
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              asChild
+              onSelect={(e: Event) => {
+                e.preventDefault();
+                signOut({ redirect: true, redirectTo: "/" });
+              }}
             >
-              <Link href="/edit">add new recipe</Link>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
-            className="text-sm group relative flex h-[25px] select-none items-center rounded-[3px] px-[5px] text-[13px] leading-none text-black outline-none data-[highlighted]:bg-[#ffcd80] data-[highlighted]:cursor-pointer data-[disabled]:text-gray-500 data-[highlighted]:text-black"
-            // disabled
-            onSelect={(e: Event) => {
-              e.preventDefault();
-              signOut({ redirect: true, redirectTo: "/" });
-            }}
-          >
-            Sign out{" "}
-          </DropdownMenu.Item>
-          <DropdownMenu.Arrow className="fill-gray-200" />
+              <SignoutButton />
+            </DropdownMenu.Item>
+          </DropdownMenu.Group>
+          {/* <DropdownMenu.Arrow className="fill-white" /> */}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
