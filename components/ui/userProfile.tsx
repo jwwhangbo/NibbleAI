@@ -4,7 +4,7 @@ import defaultUserImage from "@/public/defaultUserImage.jpg";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { roboto } from "@/components/ui/fonts"
+import { roboto } from "@/components/ui/fonts";
 
 type UserProps = {
   image?: string;
@@ -14,7 +14,9 @@ type UserProps = {
 };
 
 const logoVariants = cva("rounded-full grow-0", {
-  variants: { logoSize: { sm: "h-[24px] w-[24px]", md: "h-[32px] w-[32px]" } },
+  variants: {
+    logoSize: { sm: "h-[24px] w-[24px]", md: "h-[32px] w-[32px]" },
+  },
   defaultVariants: { logoSize: "md" },
 });
 
@@ -23,11 +25,13 @@ export default function UserProfile({
   logoOnly = false,
   logoSize = "md",
   disabled = false,
+  displayEmail = false,
   ...props
 }: {
   user: UserProps;
   logoOnly?: boolean;
   disabled?: boolean;
+  displayEmail?: boolean;
 } & React.HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof logoVariants>) {
   const { image, name, id, email } = user;
@@ -35,15 +39,22 @@ export default function UserProfile({
   if (disabled) {
     return (
       <div className={`${roboto.className} ${className}`} {...remainingProps}>
-        <Image
-            className={cn(logoVariants({ logoSize }))}
+        <div className={`relative ${cn(logoVariants({ logoSize }))}`}>
+          <div className="absolute inset-0 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.3)] rounded-full" />
+          <Image
             src={user.image || defaultUserImage}
             alt="User avatar"
             width="32"
             height="32"
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "cover", borderRadius:"9999px" }}
           />
-          {!logoOnly && <span className="line-clamp-1">{name || email}</span>}
+        </div>
+        {!logoOnly && (
+          <span>
+            <p className="line-clamp-1 text-xs">{name}</p>
+            {displayEmail && <p className="line-clamp-1 text-xs text-gray-400">{email}</p>}
+          </span>
+        )}
       </div>
     );
   }
