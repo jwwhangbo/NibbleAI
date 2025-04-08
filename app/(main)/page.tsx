@@ -1,5 +1,6 @@
 import Image from "next/image";
 import {
+  getAITrendingRecipes,
   getHomePageData,
   getRecentRatings,
   getTrendingRecipes,
@@ -19,8 +20,9 @@ export default async function Home() {
   };
   const sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-  const trendingRecipes = await getTrendingRecipes(sixMonthsAgo, 4);
+  const trendingRecipes = await getTrendingRecipes(sixMonthsAgo, 6);
   const recentRatings = await getRecentRatings(sixMonthsAgo, 3);
+  const trendingAiRecipes = await getAITrendingRecipes(sixMonthsAgo, 4);
 
   return (
     <div>
@@ -60,13 +62,21 @@ export default async function Home() {
           />
         </div>
         <section className="py-8 mb-16">
+          {/* trending section */}
           <div>
             <h1 className="px-3 sm:px-1 text-3xl font-bold mb-4">
-              Trending Now
+              What&apos;s trending right now
             </h1>
-            {/* trending cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-max gap-4 px-3 sm:px-6">
               {trendingRecipes.map((row) => (
+                <TrendingRecipeCard recipeid={row.id} key={row.id} />
+              ))}
+            </div>
+            <h1 className="px-3 sm:px-1 text-2xl font-bold my-4">
+              AI Generated
+            </h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-max gap-4 px-3 sm:px-6">
+              {trendingAiRecipes.map((row) => (
                 <TrendingRecipeCard recipeid={row.id} key={row.id} />
               ))}
             </div>
@@ -135,13 +145,13 @@ async function TrendingRecipeCard({ recipeid }: { recipeid: number }) {
 
   return (
     <Link href={`/recipes/${recipeid}`}>
-      <div className="flex flex-auto gap-3">
+      <div className="flex flex-auto gap-3 rounded-lg border-2 overflow-clip">
         <div className="relative aspect-square basis-1/3">
           <Image
             src={recipeData.thumbnail || landscapePlaceholder}
             alt="thumbnail"
             fill
-            style={{ objectFit: "cover", borderRadius: "0.125rem" }}
+            style={{ objectFit: "cover" }}
           />
         </div>
         <div className="basis-2/3 flex flex-col justify-center">
