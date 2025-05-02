@@ -16,6 +16,7 @@ import { Poppins } from "next/font/google";
 import type { Recipe as RecipeSchema, WithContext } from "schema-dts";
 import Script from "next/script";
 import { getRecipeRatingAvgAndCount } from "@/src/controllers/RatingsController";
+import ShareButton from "@/components/recipes/shareDialog";
 
 type Props = {
   params: Promise<{ [key: string]: string | undefined }>;
@@ -116,6 +117,7 @@ export default async function Page(props: {
                 userid={recipe.userid}
               />
             </Suspense>
+            <ShareButton />
             <time className="italic text-gray-400">
               {recipe.date_updated
                 ? `Updated on ${recipe.date_updated.toLocaleString("en-US", {
